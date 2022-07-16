@@ -20,22 +20,34 @@ function App() {
     }, []);
   }
 
-  function addBooking(elements) {
+  function addBooking(elements, form) {
+    const headline = form.headline.value;
+    const startDate = form.startDate.value;
+    const stopDate = form.stopDate.value;
+    const startTime = form.startTime.value;
+    const stopTime = form.stopTime.value;
+    const info = form.info.value;
+    const user = form.user.value;
+    const customer = form.customer.value;
+    const room = form.room.value;
+    console.log(user)
+    
     fetch(`${url}/booking`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        headline: elements.headline,
-        start: `${elements.startDate} ${elements.startTime}:00`,
-        stop: `${elements.stopDate} ${elements.stopTime}:00`,
-        info: elements.info,
-        user: elements.user,
-        customer: elements.customer,
-        room: elements.room,
+        headline: headline,
+        start: `${startDate} ${startTime}:00`,
+        stop: `${stopDate} ${stopTime}:00`,
+        info: info,
+        user: user,
+        customer: customer,
+        room: room,
       }),
     })
       .then((res) => res.json())
       .then((json) => setAllBookings(json));
+      
   }
 
   function deleteBooking(id) {

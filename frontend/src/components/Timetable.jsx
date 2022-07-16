@@ -11,6 +11,7 @@ import yearArray from "../yearArray.json";
 
 function Timetable(props) {
   const [allTime, setAllTime] = useRecoilState(allTimeState);
+  const [allBookings, setAllBookings] = useRecoilState(allBookingsState);
   const [week, setWeek] = useRecoilState(weekState);
   const [month, setMonth] = useRecoilState(monthState);
   const [year, setYear] = useRecoilState(yearState);
@@ -23,7 +24,7 @@ function Timetable(props) {
   let difference = date_1.getTime() - date_2.getTime();
   let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
 
-  console.log(yearList[-TotalDays].monthInt);
+  console.log(allBookings);
   /*
   console.log(yearList[-TotalDays].year);
   console.log(yearList[-TotalDays].month);
