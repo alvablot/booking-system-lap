@@ -18,21 +18,12 @@ function Timetable(props) {
   const [date, setDate] = useRecoilState(dateState);
   let [thisMonday, setThisMonday] = useState(date);
   let yearList = [...yearArray];
-
   let date_1 = new Date("01/01/2022");
   let date_2 = new Date();
   let difference = date_1.getTime() - date_2.getTime();
   let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
 
-  console.log(allBookings);
-  /*
-  console.log(yearList[-TotalDays].year);
-  console.log(yearList[-TotalDays].month);
-  console.log(yearList[-TotalDays].date);
-*/
-
   const [thisWeek, setThisWeek] = useState(0);
-
   let [inputBox, setInputBox] = useRecoilState(inputBoxState);
   let [days, setDays] = useState([]);
 
@@ -43,7 +34,7 @@ function Timetable(props) {
     setThisWeek(thisWeek);
   }, [thisWeek]);
 
-  //setWeek(parseInt(week));
+  console.log(allBookings);
   function handleTimeClick(year, month, obj, date, hour, minute) {
     let strMonth = month;
     let strDate = date;
@@ -82,26 +73,28 @@ function Timetable(props) {
   return (
     <div id="timetable-wrap">
       <div className="time-table-head">
-      <button id="button-prev"
-        onClick={() => {
-          setThisWeek(thisWeek - 7);
-        }}
-      >
-        Previous
-      </button>
-      <div id="date-prev">
-        {" "}
-        Year: {yearList[-TotalDays].year} Month:{" "}
-        {yearList[-TotalDays + thisWeek].month} Date:{" "}
-        {yearList[-TotalDays + thisWeek].date}{" "}
-      </div>
-      <button id="button-next"
-        onClick={() => {
-          setThisWeek(thisWeek + 7);
-        }}
-      >
-        Next
-      </button>
+        <button
+          id="button-prev"
+          onClick={() => {
+            setThisWeek(thisWeek - 7);
+          }}
+        >
+          Previous
+        </button>
+        <div id="date-prev">
+          {" "}
+          Year: {yearList[-TotalDays].year} Month:{" "}
+          {yearList[-TotalDays + thisWeek].month} Date:{" "}
+          {yearList[-TotalDays + thisWeek].date}{" "}
+        </div>
+        <button
+          id="button-next"
+          onClick={() => {
+            setThisWeek(thisWeek + 7);
+          }}
+        >
+          Next
+        </button>
       </div>
       <table className="timetable">
         <thead>
@@ -124,23 +117,36 @@ function Timetable(props) {
                   {item}
                 </td>
                 {days.map((day, numberOfDays) => {
-                  return (
-                    <td
-                      key={`timeCell${day}`}
-                      className="day"
-                      id={days[numberOfDays]}
-                      onClick={(e) => {
-                        handleTimeClick(
-                          yearList[-TotalDays].year,
-                          yearList[-TotalDays + thisWeek].monthInt,
-                          e.target,
-                          days[numberOfDays],
-                          i,
-                          0
-                        );
-                      }}
-                    ></td>
-                  );
+                  let booked = false;
+                  allBookings.forEach((booking) => {
+                    let tdDate = `${yearList[-TotalDays].year}-${
+                      yearList[-TotalDays + thisWeek].monthInt
+                    }-${days[numberOfDays]}`;
+                    if (booking.startDate === tdDate) {
+                      booked = true;
+                    }
+                  });
+                  if (booked) {
+                    return <td key={`timeCell${day}`}>Booked</td>;
+                  } else {
+                    return (
+                      <td
+                        key={`timeCell${day}`}
+                        className="day"
+                        id={days[numberOfDays]}
+                        onClick={(e) => {
+                          handleTimeClick(
+                            yearList[-TotalDays].year,
+                            yearList[-TotalDays + thisWeek].monthInt,
+                            e.target,
+                            days[numberOfDays],
+                            i,
+                            0
+                          );
+                        }}
+                      ></td>
+                    );
+                  }
                 })}
               </tr>
             );

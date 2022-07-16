@@ -30,15 +30,16 @@ function App() {
     const user = form.user.value;
     const customer = form.customer.value;
     const room = form.room.value;
-    console.log(user)
     
     fetch(`${url}/booking`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         headline: headline,
-        start: `${startDate} ${startTime}:00`,
-        stop: `${stopDate} ${stopTime}:00`,
+        startDate: startDate,
+        stopDate: stopDate,
+        startTime: startTime,
+        stopTime: stopTime,
         info: info,
         user: user,
         customer: customer,

@@ -3,7 +3,8 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { allBookingsState } from "../recoil/allBookings/atom";
 
 function Bookings(props) {
-  let { allBookings } = props;
+  const [allBookings, setAllBookings] = useRecoilState(allBookingsState);
+ 
   props.fetchBookings();
   function handleDelete(id) {
     props.deleteBooking(id);
@@ -21,13 +22,13 @@ function Bookings(props) {
             <div key={`headline${item.id}`}>
               <b>{item.headline}</b>
             </div>
-            <div key={`start${item.id}`}>
+            <div key={`startDate${item.id}`}>
               <b>From: </b>
-              {item.start}
+              {item.startDate} {item.startTime}
             </div>
-            <div key={`stop${item.id}`}>
+            <div key={`stopDate${item.id}`}>
               <b>To: </b>
-              {item.stop}
+              {item.stopDate} {item.stopTime}
             </div>
             <div key={`info${item.id}`}>
               <b>Info: </b>

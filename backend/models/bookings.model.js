@@ -17,7 +17,7 @@ const bookBookingId = "UPDATE books";
 
 const fetchBookingsTable = "SELECT * FROM bookings ORDER BY id DESC";
 const insertBookingRow =
-  "INSERT INTO bookings (headline, start, stop, info, user, customer, room)  VALUES(?, ?, ?, ?, ?, ?, ?)";
+  "INSERT INTO bookings (headline, startDate, stopDate, startTime, stopTime, info, user, customer, room)  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)";
 const deleteBookingRow = "DELETE FROM bookings WHERE id = ?";
 const updateBookingsRow = "UPDATE bookings";
 
@@ -44,7 +44,7 @@ async function getAll() {
 }
 
 async function addOne(data) {
-  const { headline, start, stop, info, user, customer, room } = data;
+  const { headline, startDate, stopDate, startTime, stopTime, info, user, customer, room } = data;
   //return data;
   /*
   if (!first_name || !last_name || !email || !password) return 400;
@@ -56,7 +56,7 @@ async function addOne(data) {
   }
    */
   const query = insertBookingRow;
-  db.run(query, [headline, start, stop, info, user, customer, room]);
+  db.run(query, [headline, startDate, stopDate, startTime, stopTime, info, user, customer, room]);
   result = initTable(fetchBookingsTable);
   return result;
 }
@@ -72,7 +72,7 @@ async function deleteOne(id) {
 }
 
 async function patchOne(id, data) {
-  const { headline, start, stop, info, user, customer, room } = data;
+  const { headline, startDate, stopDate, startTime, stopTime, info, user, customer, room } = data;
   async function updateBooking(col, data) {
     const result = db.run(
       `${updateBookingsRow}
@@ -87,10 +87,16 @@ async function patchOne(id, data) {
     updateBooking("headline", headline);
   }
   if (start !== undefined) {
-    updateBooking("start", start);
+    updateBooking("startDate", startDate);
   }
   if (stop !== undefined) {
-    updateBooking("stop", stop);
+    updateBooking("stopDate", stopDate);
+  }
+  if (start !== undefined) {
+    updateBooking("startTime", startTime);
+  }
+  if (stop !== undefined) {
+    updateBooking("stopTime", stopTime);
   }
   if (info !== undefined) {
     updateBooking("info", info);

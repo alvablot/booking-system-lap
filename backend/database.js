@@ -14,8 +14,10 @@ const db = new sqlite3.Database(dbFile, (error) => {
   const bookingStmt = `CREATE TABLE bookings (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     headline VARCHAR (255),
-    start DATETIME,
-    stop DATETIME,
+    startDate DATE,
+    stopDate DATE,
+    startTime TIME,
+    stopTime TIME,
     info TEXT,
     user VARCHAR (255),
     customer VARCHAR (255),
@@ -30,18 +32,21 @@ const db = new sqlite3.Database(dbFile, (error) => {
     } else {
       const insertBooking = `INSERT INTO bookings (
         headline, 
-        start, 
-        stop, 
+        startDate,
+        stopDate,
+        startTime,
+        stopTime,
         info,
         user,
         customer,
         room
-        
-        ) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       db.run(insertBooking, [
         "Booking Headline",
-        "2022-01-02 16:00:00",
-        "2022-01-03 19:41:22",
+        "2022-01-02",
+        "2022-01-02",
+        "16:00:00",
+        "17:00:00",
         "Information",
         "User",
         "Customer Corp",
