@@ -10,6 +10,17 @@ import { inputBoxState } from "../recoil/inputBox/atom";
 import yearArray from "../yearArray.json";
 
 function Timetable(props) {
+  let tdDate = [];
+  let tdTime = [];
+  const dayNameArray = [
+    "Monday",
+    "Thusday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
   const [allTime, setAllTime] = useRecoilState(allTimeState);
   const [allBookings, setAllBookings] = useRecoilState(allBookingsState);
   const [week, setWeek] = useRecoilState(weekState);
@@ -41,7 +52,8 @@ function Timetable(props) {
     if (strMonth.toString().length < 2) strMonth = "0" + strMonth;
     if (strDate.toString().length < 2) strDate = "0" + strDate;
     const dateStamp = `${year}-${strMonth}-${strDate}`;
-    console.log(month);
+    console.log(tdDate);
+    console.log(tdTime);
 
     let strHour = hour;
     let strMinute = minute;
@@ -49,6 +61,7 @@ function Timetable(props) {
     if (strMinute.toString().length < 2) strMinute = "0" + strMinute;
     const time = `${strHour}:${strMinute}`;
     //if (month.toString().length < 2) month = "0" + month;
+  
 
     setDate({
       dateStamp: dateStamp,
@@ -100,13 +113,13 @@ function Timetable(props) {
         <thead>
           <tr className="dayRow">
             <td className="time">Time</td>
-            <td className="day">Monday {days[0]}</td>
-            <td className="day">Tuesday {days[1]}</td>
-            <td className="day">Wednesday {days[2]}</td>
-            <td className="day">Thursday {days[3]}</td>
-            <td className="day">Friday {days[4]}</td>
-            <td className="day">Saturday {days[5]}</td>
-            <td className="day">Sunday {days[6]}</td>
+            {days.map((day, i) => {
+              return (
+                <td className="day">
+                  {dayNameArray[i]} {day}
+                </td>
+              );
+            })}
           </tr>
         </thead>
         <tbody>
@@ -117,16 +130,29 @@ function Timetable(props) {
                   {item}
                 </td>
                 {days.map((day, numberOfDays) => {
-                  let booked = false;
+                  let bookStart = false;
+                  let bookEnd = false;
+
                   allBookings.forEach((booking) => {
-                    let tdDate = `${yearList[-TotalDays].year}-${
-                      yearList[-TotalDays + thisWeek].monthInt
-                    }-${days[numberOfDays]}`;
-                    if (booking.startDate === tdDate) {
-                      booked = true;
+                    let newTdDate = [
+                      `${yearList[-TotalDays].year}-${
+                        yearList[-TotalDays + thisWeek].monthInt
+                      }-${days[numberOfDays]}`,
+                    ];
+                    tdDate.push(newTdDate);
+
+                    let newTdTime = [`${i}:00`];
+                    tdTime.push(newTdTime);
+
+                    if (i < 10) tdTime[0] = `0${i}:00`;
+                    if (
+                      booking.startDate === tdDate[0] &&
+                      booking.startTime === tdTime[0]
+                    ) {
+                      bookStart = true;
                     }
                   });
-                  if (booked) {
+                  if (bookStart) {
                     return <td key={`timeCell${day}`}>Booked</td>;
                   } else {
                     return (
