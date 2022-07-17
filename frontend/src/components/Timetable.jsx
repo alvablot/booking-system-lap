@@ -10,8 +10,8 @@ import { inputBoxState } from "../recoil/inputBox/atom";
 import yearArray from "../yearArray.json";
 
 function Timetable(props) {
-  let tdDate = [];
-  let tdTime = [];
+  let tdDate;
+  let tdTime;
   const dayNameArray = [
     "Monday",
     "Thusday",
@@ -44,27 +44,23 @@ function Timetable(props) {
   useEffect(() => {
     setThisWeek(thisWeek);
   }, [thisWeek]);
-
-  console.log(allBookings);
+  ////////////////////////////////////////////////////////////////////
   function handleTimeClick(year, month, obj, date, hour, minute) {
+    /*
     let strMonth = month;
     let strDate = date;
     if (strMonth.toString().length < 2) strMonth = "0" + strMonth;
     if (strDate.toString().length < 2) strDate = "0" + strDate;
     const dateStamp = `${year}-${strMonth}-${strDate}`;
-    console.log(tdDate);
-    console.log(tdTime);
-
+*/
     let strHour = hour;
     let strMinute = minute;
     if (strHour.toString().length < 2) strHour = "0" + strHour;
     if (strMinute.toString().length < 2) strMinute = "0" + strMinute;
     const time = `${strHour}:${strMinute}`;
-    //if (month.toString().length < 2) month = "0" + month;
-  
 
     setDate({
-      dateStamp: dateStamp,
+      //dateStamp: dateStamp,
       year: year,
       month: month,
       date: obj.id,
@@ -78,7 +74,7 @@ function Timetable(props) {
     if (obj.className === "day") obj.className = "activeDay";
     else obj.className = "day";
   }
-
+  /////////////////////////////////////////////////////////////////////
   useEffect(() => {
     setDate(date);
   }, [date]);
@@ -129,30 +125,20 @@ function Timetable(props) {
                 <td className="time" key={`time${item}`}>
                   {item}
                 </td>
+
                 {days.map((day, numberOfDays) => {
-                  let bookStart = false;
-                  let bookEnd = false;
-
+                  let booked = false;
                   allBookings.forEach((booking) => {
-                    let newTdDate = [
-                      `${yearList[-TotalDays].year}-${
-                        yearList[-TotalDays + thisWeek].monthInt
-                      }-${days[numberOfDays]}`,
-                    ];
-                    tdDate.push(newTdDate);
-
-                    let newTdTime = [`${i}:00`];
-                    tdTime.push(newTdTime);
-
-                    if (i < 10) tdTime[0] = `0${i}:00`;
-                    if (
-                      booking.startDate === tdDate[0] &&
-                      booking.startTime === tdTime[0]
-                    ) {
-                      bookStart = true;
+                    let tdDate = `${yearList[-TotalDays].year}-${
+                      yearList[-TotalDays + thisWeek].monthInt
+                    }-${days[numberOfDays]}`;
+                    console.log(booking.startTime);
+                    console.log(item);
+                    if (booking.startDate === tdDate && booking.startTime === item) {
+                      booked = true;
                     }
                   });
-                  if (bookStart) {
+                  if (booked) {
                     return <td key={`timeCell${day}`}>Booked</td>;
                   } else {
                     return (
