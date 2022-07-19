@@ -10,7 +10,8 @@ const url = "http://localhost:4000";
 
 function App() {
   let [allBookings, setAllBookings] = useRecoilState(allBookingsState);
- 
+  let bookingsArray = [...allBookings];
+  let splitBookings;
   let [bookingId, setBookingId] = useState("");
   function fetchBookings() {
     useEffect(() => {
@@ -30,7 +31,7 @@ function App() {
     const user = form.user.value;
     const customer = form.customer.value;
     const room = form.room.value;
-    
+
     fetch(`${url}/booking`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -48,7 +49,6 @@ function App() {
     })
       .then((res) => res.json())
       .then((json) => setAllBookings(json));
-      
   }
 
   function deleteBooking(id) {
@@ -56,6 +56,13 @@ function App() {
       .then((res) => res.json())
       .then((json) => setAllBookings(json));
   }
+  let splitStartDate;
+  useEffect(() => {
+    if (bookingsArray[0].startDate !== undefined) {
+      splitStartDate = bookingsArray[0].startDate.split("-");
+      console.log(splitStartDate);
+    }
+  }, [allBookings]);
 
   return (
     <div className="App">

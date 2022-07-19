@@ -69,7 +69,7 @@ function Timetable(props) {
       time: time,
       day: date.day,
     });
-    console.log(dateStamp);
+    //console.log(dateStamp);
     setInputBox("block");
     if (obj.className === "day") obj.className = "activeDay";
     else obj.className = "day";
