@@ -46,13 +46,13 @@ function Timetable(props) {
   }, [thisWeek]);
   ////////////////////////////////////////////////////////////////////
   function handleTimeClick(year, month, obj, date, hour, minute) {
-    /*
+    
     let strMonth = month;
     let strDate = date;
     if (strMonth.toString().length < 2) strMonth = "0" + strMonth;
     if (strDate.toString().length < 2) strDate = "0" + strDate;
     const dateStamp = `${year}-${strMonth}-${strDate}`;
-*/
+
     let strHour = hour;
     let strMinute = minute;
     if (strHour.toString().length < 2) strHour = "0" + strHour;
@@ -60,17 +60,17 @@ function Timetable(props) {
     const time = `${strHour}:${strMinute}`;
 
     setDate({
-      //dateStamp: dateStamp,
+      dateStamp: dateStamp,
       year: year,
       month: month,
-      date: obj.id,
+      date: date,
       hour: hour,
       minute: minute,
       time: time,
       day: date.day,
     });
+    console.log(dateStamp);
     setInputBox("block");
-
     if (obj.className === "day") obj.className = "activeDay";
     else obj.className = "day";
   }
@@ -111,7 +111,7 @@ function Timetable(props) {
             <td className="time">Time</td>
             {days.map((day, i) => {
               return (
-                <td className="day">
+                <td className="day" key={`day_${i}`}>
                   {dayNameArray[i]} {day}
                 </td>
               );
@@ -132,9 +132,10 @@ function Timetable(props) {
                     let tdDate = `${yearList[-TotalDays].year}-${
                       yearList[-TotalDays + thisWeek].monthInt
                     }-${days[numberOfDays]}`;
-                    console.log(booking.startTime);
-                    console.log(item);
-                    if (booking.startDate === tdDate && booking.startTime === item) {
+                    if (
+                      booking.startDate === tdDate &&
+                      booking.startTime === item
+                    ) {
                       booked = true;
                     }
                   });
