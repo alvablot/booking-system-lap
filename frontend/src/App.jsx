@@ -57,24 +57,25 @@ function App() {
       .then((json) => setAllBookings(json));
   }
   let splitStartDate;
-  useEffect(() => {
+  /*useEffect(() => {
     if (bookingsArray[0].startDate !== undefined) {
       splitStartDate = bookingsArray[0].startDate.split("-");
       console.log(splitStartDate);
     }
-  }, [allBookings]);
+  }, [allBookings]);*/
 
   return (
     <div className="App">
       <header className="App-header">
-        <InputBox addBooking={addBooking} />
-        <Timetable />
+       <InputBox addBooking={addBooking} />
+        {/*<Timetable />*/}
         <br />
         <Bookings
           fetchBookings={fetchBookings}
           deleteBooking={deleteBooking}
           allBookings={allBookings}
         />
+  
       </header>
     </div>
   );

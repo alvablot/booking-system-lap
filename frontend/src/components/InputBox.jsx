@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { allBookingsState } from "../recoil/allBookings/atom";
-
 import { dateState } from "../recoil/date/atom";
 import { inputBoxState } from "../recoil/inputBox/atom";
 import dateList from "../dateList.json";
@@ -19,27 +18,23 @@ function InputBox(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    props.addBooking(inputs, event.target);
+    props.addBooking(inputs);
   };
 
   return (
     <div id="inputBox" style={{ display: inputBox }}>
       <form onSubmit={handleSubmit}>
-        <div id="container">
-          <div id="headInput">
-            <div id="h1" className="headline">New Booking </div>
-            <div id="close" className="headline">
-              <a
-                href="#"
-                id="closing"
-                onClick={() => {
-                  setInputBox("none");
-                }}
-              >
-                Close
-              </a>
-            </div>
-          </div>
+        <h1>New Booking </h1>
+        <div id="close">
+          <a
+            href="#"
+            id="closing"
+            onClick={() => {
+              setInputBox("none");
+            }}
+          >
+            Close
+          </a>
         </div>
         <label htmlFor="headline">Headline</label>
         <br />
@@ -59,14 +54,14 @@ function InputBox(props) {
           type="text"
           id="startDate"
           name="startDate"
-          value={inputs.startDate || `${date.year}-${date.month}-${date.date}`}
+          value={inputs.startDate || `${date.startYear}-${date.startMonth}-${date.startDate}`}
           onChange={handleChange}
         />
         <input
           type="text"
           id="startTime"
           name="startTime"
-          value={inputs.startTime || date.time}
+          value={inputs.startTime || `${date.startHour}:${date.startMinute}`}
           onChange={handleChange}
         ></input>
         <br />
@@ -77,14 +72,14 @@ function InputBox(props) {
           type="text"
           id="stopDate"
           name="stopDate"
-          value={inputs.stopDate || `${date.year}-${date.month}-${date.date}`}
+          value={inputs.stopDate || `${date.stopYear}-${date.stopMonth}-${date.stopDate}`}
           onChange={handleChange}
         />
         <input
           type="text"
           id="stopTime"
           name="stopTime"
-          value={inputs.stopTime || date.time}
+          value={inputs.stopTime || `${date.stopHour}:${date.stopMinute}`}
           onChange={handleChange}
         ></input>
         <br />
@@ -106,14 +101,14 @@ function InputBox(props) {
             <option value="Room3">Room3</option>
             <option value="Room4">Room4</option>
           </select>
-          <input
+          {/*<input
             id="user"
             name="user"
             className="textInput"
             type="text"
-            defaultValue={inputs.user || "User"}
+            value={inputs.user || "User"}
             onChange={handleChange}
-          />
+          />*/}
           <select id="customer" name="customer" onChange={handleChange}>
             <option value="Chose Customer">Chose Customer</option>
             <option value="New customer">New customer</option>

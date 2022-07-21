@@ -18,10 +18,23 @@ const dateStamp = `${year}-${strMonth}-${strDate}`;
 if (minute < 10) strMinute = "0" + minute;
 const timeStamp = `${hour}:${minute}`;
 
-
 export const dateState = atom({
   key: "dates",
   default: {
+    startYear: year,
+    startMonth: month,
+    startDate: date - day,
+    startHour: hour,
+    startMinute: minute,
+    stopYear: year,
+    stopMonth: month,
+    stopDate: date - day,
+    stopHour: hour + 1,
+    stopMinute: minute,
+    
+    time: timeStamp,
+    dateStamp: dateStamp,
+    /*
     year: year,
     month: month,
     date: date - day,
@@ -30,5 +43,6 @@ export const dateState = atom({
     minute: minute,
     time: timeStamp,
     dateStamp: dateStamp,
+    */
   },
 });
