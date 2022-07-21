@@ -37,16 +37,18 @@ function Timetable(props) {
   const [thisWeek, setThisWeek] = useState(0);
   let [inputBox, setInputBox] = useRecoilState(inputBoxState);
   let [days, setDays] = useState([]);
+  let dayOfTheWeek = new Date().getDay() - 1;
+  let monday = -dayOfTheWeek;
 
   for (let i = 0; i < 7; i++) {
     days[i] = yearList[-TotalDays + thisWeek + i].date;
   }
+
   useEffect(() => {
     setThisWeek(thisWeek);
   }, [thisWeek]);
   ////////////////////////////////////////////////////////////////////
   function handleTimeClick(year, month, obj, date, hour, minute) {
-    
     let strMonth = month;
     let strDate = date;
     if (strMonth.toString().length < 2) strMonth = "0" + strMonth;
@@ -69,7 +71,7 @@ function Timetable(props) {
       time: time,
       day: date.day,
     });
-    console.log(dateStamp);
+    //console.log(dateStamp);
     setInputBox("block");
     if (obj.className === "day") obj.className = "activeDay";
     else obj.className = "day";
@@ -112,7 +114,8 @@ function Timetable(props) {
             {days.map((day, i) => {
               return (
                 <td className="day" key={`day_${i}`}>
-                  {dayNameArray[i]} {day}
+                  {dayNameArray[i]}{" "}
+                  {yearList[-TotalDays + thisWeek].date - dayOfTheWeek + i}
                 </td>
               );
             })}
@@ -131,7 +134,9 @@ function Timetable(props) {
                   allBookings.forEach((booking) => {
                     let tdDate = `${yearList[-TotalDays].year}-${
                       yearList[-TotalDays + thisWeek].monthInt
-                    }-${days[numberOfDays]}`;
+                    }-${
+                      yearList[-TotalDays + thisWeek].date - dayOfTheWeek + i
+                    }`;
                     if (
                       booking.startDate === tdDate &&
                       booking.startTime === item
@@ -146,13 +151,17 @@ function Timetable(props) {
                       <td
                         key={`timeCell${day}`}
                         className="day"
-                        id={days[numberOfDays]}
+                        id={
+                          yearList[-TotalDays + thisWeek].date -
+                          dayOfTheWeek +
+                          i
+                        }
                         onClick={(e) => {
                           handleTimeClick(
                             yearList[-TotalDays].year,
                             yearList[-TotalDays + thisWeek].monthInt,
                             e.target,
-                            days[numberOfDays],
+                            days[numberOfDays] - 3,
                             i,
                             0
                           );

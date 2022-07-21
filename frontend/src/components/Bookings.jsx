@@ -4,8 +4,7 @@ import { allBookingsState } from "../recoil/allBookings/atom";
 
 function Bookings(props) {
   const [allBookings, setAllBookings] = useRecoilState(allBookingsState);
- 
-  props.fetchBookings();
+  //props.fetchBookings();
   function handleDelete(id) {
     props.deleteBooking(id);
   }

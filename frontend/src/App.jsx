@@ -10,15 +10,58 @@ const url = "http://localhost:4000";
 
 function App() {
   let [allBookings, setAllBookings] = useRecoilState(allBookingsState);
- 
   let [bookingId, setBookingId] = useState("");
-  function fetchBookings() {
-    useEffect(() => {
-      fetch(`${url}/bookings`)
-        .then((res) => res.json())
-        .then((json) => setAllBookings(json));
-    }, []);
+  let destructedBookingsStart = [{}];
+  let destructedBookingsStop = [];
+
+  useEffect(() => {
+    fetch(`${url}/bookings`)
+      .then((res) => res.json())
+      .then((json) => setAllBookings(json));
+  }, []);
+  let startBookingDate = [];
+  let stopBookingDate = [];
+  useEffect(() => {
+    if (allBookings[0] !== undefined) {
+      allBookings.forEach((booking, i) => {
+        startBookingDate[i] = new Date(booking.startDate);
+        let startYear = startBookingDate[i].getFullYear();
+        let startMonth = startBookingDate[i].getMonth() + 1;
+        let startDate = startBookingDate[i].getDate();
+        let time = booking.startTime.split(":");
+        let hours = parseInt(time[0]);
+        let minutes = parseInt(time[1]);
+        startBookingDate[i].setHours(hours);
+        startBookingDate[i].setMinutes(minutes);
+      });
+
+      console.log(startBookingDate);
+    }
+  }, [allBookings]);
+
+  /*
+  if (allBookings[0] !== undefined) {
+    let a = 0;
+    allBookings.forEach((booking, i) => {
+      if (a < 2) {
+        let destructedTime = booking.startTime.split(":");
+        destructedTime.join(",");
+        let hour = parseInt(destructedTime[0]);
+        let minute = parseInt(destructedTime[1]);
+        if (destructedBookingsStart[i] !== undefined) {
+          destructedBookingsStart[i] = new Date(booking.startDate);
+        }
+        console.log(destructedBookingsStart);
+        //destructedBookingsStop[i] = new Date(booking.stoptDate, booking.stopTime);
+      }
+      a++;
+    });
+    console.log(destructedBookingsStart);
   }
+*/
+  useEffect(() => {
+    setAllBookings;
+  }, [allBookings]);
 
   function addBooking(elements, form) {
     const headline = form.headline.value;
@@ -30,7 +73,7 @@ function App() {
     const user = form.user.value;
     const customer = form.customer.value;
     const room = form.room.value;
-    
+
     fetch(`${url}/booking`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -48,7 +91,6 @@ function App() {
     })
       .then((res) => res.json())
       .then((json) => setAllBookings(json));
-      
   }
 
   function deleteBooking(id) {
@@ -63,11 +105,7 @@ function App() {
         <InputBox addBooking={addBooking} />
         <Timetable />
         <br />
-        <Bookings
-          fetchBookings={fetchBookings}
-          deleteBooking={deleteBooking}
-          allBookings={allBookings}
-        />
+        <Bookings deleteBooking={deleteBooking} />
       </header>
     </div>
   );
