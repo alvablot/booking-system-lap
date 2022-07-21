@@ -2,6 +2,8 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { allBookingsState } from "./recoil/allBookings/atom";
+import { startBookingsState } from "./recoil/startBookings/atom";
+import { stopBookingsState } from "./recoil/stopBookings/atom";
 import { allTimeState } from "./recoil/allTime/atom";
 import Bookings from "./components/Bookings";
 import InputBox from "./components/InputBox";
@@ -10,6 +12,10 @@ const url = "http://localhost:4000";
 
 function App() {
   let [allBookings, setAllBookings] = useRecoilState(allBookingsState);
+  let [startBookingaState, setStartBookingsState] =
+    useRecoilState(startBookingsState);
+  let [stopBookingaState, setStopBookingsState] =
+    useRecoilState(stopBookingsState);
   let [bookingId, setBookingId] = useState("");
   let destructedBookingsStart = [{}];
   let destructedBookingsStop = [];
@@ -28,40 +34,34 @@ function App() {
         let startYear = startBookingDate[i].getFullYear();
         let startMonth = startBookingDate[i].getMonth() + 1;
         let startDate = startBookingDate[i].getDate();
-        let time = booking.startTime.split(":");
-        let hours = parseInt(time[0]);
-        let minutes = parseInt(time[1]);
-        startBookingDate[i].setHours(hours);
-        startBookingDate[i].setMinutes(minutes);
-      });
+        let startTime = booking.startTime.split(":");
+        let startHours = parseInt(startTime[0]);
+        let StartMinutes = parseInt(startTime[1]);
+        startBookingDate[i].setHours(startHours);
+        startBookingDate[i].setMinutes(StartMinutes);
 
-      console.log(startBookingDate);
+        stopBookingDate[i] = new Date(booking.stopDate);
+        let stopYear = stopBookingDate[i].getFullYear();
+        let stopMonth = stopBookingDate[i].getMonth() + 1;
+        let stopDate = stopBookingDate[i].getDate();
+        let stopTime = booking.stopTime.split(":");
+        let stopHours = parseInt(stopTime[0]);
+        let stopMinutes = parseInt(stopTime[1]);
+        stopBookingDate[i].setHours(stopHours);
+        stopBookingDate[i].setMinutes(stopMinutes);
+      });
+      if (stopBookingDate[0] !== undefined || startBookingDate !== undefined) {
+        setStartBookingsState(startBookingDate);
+        setStopBookingsState(stopBookingDate);
+      }
     }
   }, [allBookings]);
 
-  /*
-  if (allBookings[0] !== undefined) {
-    let a = 0;
-    allBookings.forEach((booking, i) => {
-      if (a < 2) {
-        let destructedTime = booking.startTime.split(":");
-        destructedTime.join(",");
-        let hour = parseInt(destructedTime[0]);
-        let minute = parseInt(destructedTime[1]);
-        if (destructedBookingsStart[i] !== undefined) {
-          destructedBookingsStart[i] = new Date(booking.startDate);
-        }
-        console.log(destructedBookingsStart);
-        //destructedBookingsStop[i] = new Date(booking.stoptDate, booking.stopTime);
-      }
-      a++;
-    });
-    console.log(destructedBookingsStart);
-  }
-*/
   useEffect(() => {
+    setStopBookingsState;
+    setStartBookingsState;
     setAllBookings;
-  }, [allBookings]);
+  }, [allBookings, stopBookingDate, startBookingDate]);
 
   function addBooking(elements, form) {
     const headline = form.headline.value;

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { allBookingsState } from "../recoil/allBookings/atom";
+import { startBookingsState } from "../recoil/startBookings/atom";
+import { stopBookingsState } from "../recoil/stopBookings/atom";
 import { allTimeState } from "../recoil/allTime/atom";
 import { weekState } from "../recoil/week/atom";
 import { monthState } from "../recoil/month/atom";
@@ -23,6 +25,10 @@ function Timetable(props) {
   ];
   const [allTime, setAllTime] = useRecoilState(allTimeState);
   const [allBookings, setAllBookings] = useRecoilState(allBookingsState);
+  let [startBookingaState, setStartBookingsState] =
+    useRecoilState(startBookingsState);
+  let [stopBookingaState, setStopBookingsState] =
+    useRecoilState(stopBookingsState);
   const [week, setWeek] = useRecoilState(weekState);
   const [month, setMonth] = useRecoilState(monthState);
   const [year, setYear] = useRecoilState(yearState);
@@ -43,7 +49,11 @@ function Timetable(props) {
   for (let i = 0; i < 7; i++) {
     days[i] = yearList[-TotalDays + thisWeek + i].date;
   }
-
+  if (stopBookingaState[0] !== undefined || startBookingaState[0] !== undefined) {
+    console.log(
+      stopBookingaState[0].getHours() - startBookingaState[0].getHours()
+    );
+  }
   useEffect(() => {
     setThisWeek(thisWeek);
   }, [thisWeek]);
