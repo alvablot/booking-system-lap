@@ -12,9 +12,9 @@ const url = "http://localhost:4000";
 
 function App() {
   let [allBookings, setAllBookings] = useRecoilState(allBookingsState);
-  let [startBookingaState, setStartBookingsState] =
+  let [startBookings, setStartBookings] =
     useRecoilState(startBookingsState);
-  let [stopBookingaState, setStopBookingsState] =
+  let [stopBookings, setStopBookings] =
     useRecoilState(stopBookingsState);
   let [bookingId, setBookingId] = useState("");
   let destructedBookingsStart = [{}];
@@ -28,8 +28,8 @@ function App() {
   let startBookingDate = [];
   let stopBookingDate = [];
   useEffect(() => {
-    if (allBookings[0] !== undefined) {
-      allBookings.forEach((booking, i) => {
+    //if (allBookings[0] !== undefined) {
+      allBookings.map((booking, i) => {
         startBookingDate[i] = new Date(booking.startDate);
         let startYear = startBookingDate[i].getFullYear();
         let startMonth = startBookingDate[i].getMonth() + 1;
@@ -50,16 +50,16 @@ function App() {
         stopBookingDate[i].setHours(stopHours);
         stopBookingDate[i].setMinutes(stopMinutes);
       });
-      if (stopBookingDate[0] !== undefined || startBookingDate !== undefined) {
-        setStartBookingsState(startBookingDate);
-        setStopBookingsState(stopBookingDate);
-      }
-    }
+     // if (stopBookingDate[0] !== undefined || startBookingDate[0] !== undefined) {
+        setStartBookings(startBookingDate);
+        setStopBookings(stopBookingDate);
+      //}
+   // }
   }, [allBookings]);
 
   useEffect(() => {
-    setStopBookingsState;
-    setStartBookingsState;
+    setStopBookings;
+    setStartBookings;
     setAllBookings;
   }, [allBookings, stopBookingDate, startBookingDate]);
 

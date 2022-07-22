@@ -25,9 +25,9 @@ function Timetable(props) {
   ];
   const [allTime, setAllTime] = useRecoilState(allTimeState);
   const [allBookings, setAllBookings] = useRecoilState(allBookingsState);
-  let [startBookingaState, setStartBookingsState] =
+  let [startBookings, setStartBookings] =
     useRecoilState(startBookingsState);
-  let [stopBookingaState, setStopBookingsState] =
+  let [stopBookings, setStopBookings] =
     useRecoilState(stopBookingsState);
   const [week, setWeek] = useRecoilState(weekState);
   const [month, setMonth] = useRecoilState(monthState);
@@ -45,42 +45,27 @@ function Timetable(props) {
   let [days, setDays] = useState([]);
   let dayOfTheWeek = new Date().getDay() - 1;
   let monday = -dayOfTheWeek;
+  let newBookingArray = [];
 
   for (let i = 0; i < 7; i++) {
     days[i] = yearList[-TotalDays + thisWeek + i].date;
   }
-  if (
-    stopBookingaState[0] !== undefined ||
-    startBookingaState[0] !== undefined
-  ) {
-    //console.log(stopBookingaState[0].getHours() - startBookingaState[0].getHours());
-  }
-  /*
-  useEffect(() => {
-    setThisWeek(thisWeek);
-  }, [thisWeek]);
-  */
+
   ////////////////////////////////////////////////////////////////////
-  function handleTimeClick(year, month, obj, date, hour, minute) {
+  function handleTimeClick(year, month, obj, date, time) {
     let strMonth = month;
     let strDate = date;
     if (strMonth.toString().length < 2) strMonth = "0" + strMonth;
     if (strDate.toString().length < 2) strDate = "0" + strDate;
     const dateStamp = `${year}-${strMonth}-${strDate}`;
 
-    let strHour = hour;
-    let strMinute = minute;
-    if (strHour.toString().length < 2) strHour = "0" + strHour;
-    if (strMinute.toString().length < 2) strMinute = "0" + strMinute;
-    const time = `${strHour}:${strMinute}`;
-
     setDate({
       dateStamp: dateStamp,
       year: year,
       month: month,
       date: date,
-      hour: hour,
-      minute: minute,
+      //hour: hour,
+      //minute: minute,
       time: time,
       day: date.day,
     });
@@ -107,8 +92,9 @@ function Timetable(props) {
         </button>
         <div id="date-prev">
           {" "}
-          {yearList[-TotalDays + thisWeek].month} {" "} {yearList[-TotalDays].year} {" "}
-          {yearList[-TotalDays + thisWeek].date}{" "}Week: {yearList[-TotalDays + thisWeek].date}
+          {yearList[-TotalDays + thisWeek].month} {yearList[-TotalDays].year}{" "}
+          {yearList[-TotalDays + thisWeek].date} Week:{" "}
+          {yearList[-TotalDays + thisWeek].date}
         </div>
         <button
           id="button-next"
@@ -134,29 +120,49 @@ function Timetable(props) {
           </tr>
         </thead>
         <tbody>
-          {allTime.map((item, i) => {
+          {allTime.map((time, i) => {
+            let booked = [];
             return (
-              <tr className="dayRow" key={`dayRow${item}`}>
-                <td className="time" key={`time${item}`}>
-                  {item}
+              <tr className="dayRow" key={`dayRow${time}`}>
+                <td className="time" key={`time${time}`}>
+                  {time}
                 </td>
 
                 {days.map((day, numberOfDays) => {
-                  let booked = false;
-                  allBookings.forEach((booking) => {
-                    let tdDate = `${yearList[-TotalDays].year}-${
+                  ////////////////////////////////////////////////////////////////////////////////////////////////////
+                  let tdDate = new Date(
+                    `${yearList[-TotalDays].year}-${
                       yearList[-TotalDays + thisWeek].monthInt
                     }-${
-                      yearList[-TotalDays + thisWeek].date - dayOfTheWeek + i
-                    }`;
+                      yearList[-TotalDays + numberOfDays + thisWeek - 4].date
+                    } ${time}`
+                  );
+                  startBookings.map((startBooking, i) => {
                     if (
-                      booking.startDate === tdDate &&
-                      booking.startTime === item
+/*
+                      startBooking.getYear() === tdDate.getYear() && 
+                      startBooking.getMonth() === tdDate.getMonth() &&
+                      startBooking.getDate() === tdDate.getDate() &&
+                      startBooking.getHours() <= tdDate.getHours() &&
+                      startBooking.getMinutes() <= tdDate.getMinutes()
+                      */
+
+
+                      startBooking.getYear() === tdDate.getYear() && stopBookings[i].getYear() === tdDate.getYear() &&
+                      startBooking.getMonth() === tdDate.getMonth() && stopBookings[i].getMonth() === tdDate.getMonth() &&
+                      startBooking.getDate() === tdDate.getDate() && stopBookings[i].getDate() === tdDate.getDate() &&
+                      startBooking.getHours() <= tdDate.getHours() && stopBookings[i].getHours() >= tdDate.getHours() &&
+                      startBooking.getMinutes() === tdDate.getMinutes() &&  stopBookings[i].getMinutes() === tdDate.getMinutes()
+
+
+
+
                     ) {
-                      booked = true;
+                      booked[numberOfDays] = true;
                     }
                   });
-                  if (booked) {
+
+                  if (booked[numberOfDays]) {
                     return <td key={`timeCell${day}`}>Booked</td>;
                   } else {
                     return (
@@ -168,10 +174,11 @@ function Timetable(props) {
                             yearList[-TotalDays].year,
                             yearList[-TotalDays + thisWeek].monthInt,
                             e.target,
-                            yearList[-TotalDays + numberOfDays + thisWeek - 4].date,
-                            i,
-                            0
+                            yearList[-TotalDays + numberOfDays + thisWeek - 4]
+                              .date,
+                            time
                           );
+                          console.log(tdDate);
                         }}
                       ></td>
                     );
