@@ -148,11 +148,11 @@ function Timetable(props) {
                       */
 
 
-                      startBooking.getYear() === tdDate.getYear() && stopBookings[i].getYear() === tdDate.getYear() &&
-                      startBooking.getMonth() === tdDate.getMonth() && stopBookings[i].getMonth() === tdDate.getMonth() &&
-                      startBooking.getDate() === tdDate.getDate() && stopBookings[i].getDate() === tdDate.getDate() &&
+                      startBooking.getYear() <= tdDate.getYear() && stopBookings[i].getYear() >= tdDate.getYear() &&
+                      startBooking.getMonth() <= tdDate.getMonth() && stopBookings[i].getMonth() >= tdDate.getMonth() &&
+                      startBooking.getDate() <= tdDate.getDate() && stopBookings[i].getDate() >= tdDate.getDate() &&
                       startBooking.getHours() <= tdDate.getHours() && stopBookings[i].getHours() >= tdDate.getHours() &&
-                      startBooking.getMinutes() === tdDate.getMinutes() &&  stopBookings[i].getMinutes() === tdDate.getMinutes()
+                      startBooking.getMinutes() <= tdDate.getMinutes() &&  stopBookings[i].getMinutes() >= tdDate.getMinutes()
 
 
 

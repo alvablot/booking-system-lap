@@ -86,16 +86,16 @@ async function patchOne(id, data) {
   if (headline !== undefined) {
     updateBooking("headline", headline);
   }
-  if (start !== undefined) {
+  if (startDate !== undefined) {
     updateBooking("startDate", startDate);
   }
-  if (stop !== undefined) {
+  if (stopDate !== undefined) {
     updateBooking("stopDate", stopDate);
   }
-  if (start !== undefined) {
+  if (startTime !== undefined) {
     updateBooking("startTime", startTime);
   }
-  if (stop !== undefined) {
+  if (stopTime !== undefined) {
     updateBooking("stopTime", stopTime);
   }
   if (info !== undefined) {
