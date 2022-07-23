@@ -59,7 +59,7 @@ function InputBox(props) {
           type="text"
           id="startDate"
           name="startDate"
-          value={inputs.startDate || `${date.year}-${date.month}-${date.date}`}
+          value={inputs.startDate || `${date.year}-${date.month}-${date.date - 1}`}
           onChange={handleChange}
         />
         <input
@@ -77,7 +77,7 @@ function InputBox(props) {
           type="text"
           id="stopDate"
           name="stopDate"
-          value={inputs.stopDate || `${date.year}-${date.month}-${date.date}`}
+          value={inputs.stopDate || `${date.year}-${date.month}-${date.date - 1}`}
           onChange={handleChange}
         />
         <input

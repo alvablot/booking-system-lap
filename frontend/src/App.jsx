@@ -7,6 +7,7 @@ import { stopBookingsState } from "./recoil/stopBookings/atom";
 import { allTimeState } from "./recoil/allTime/atom";
 import Bookings from "./components/Bookings";
 import InputBox from "./components/InputBox";
+import NewTable from "./components/NewTable";
 import Timetable from "./components/Timetable";
 const url = "http://localhost:4000";
 
@@ -103,7 +104,8 @@ function App() {
     <div className="App">
       <header className="App-header">
         <InputBox addBooking={addBooking} />
-        <Timetable />
+        <NewTable />
+        {/*<Timetable />*/}
         <br />
         <Bookings deleteBooking={deleteBooking} />
       </header>

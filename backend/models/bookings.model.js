@@ -80,10 +80,10 @@ async function patchOne(id, data) {
       WHERE id = ?`,
       [data, id]
     );
-    return result;
+   return result;
   }
 
-  if (headline !== undefined) {
+  if (headline !== undefined) { 
     updateBooking("headline", headline);
   }
   if (startDate !== undefined) {

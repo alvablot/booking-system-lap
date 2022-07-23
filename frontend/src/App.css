@@ -10,7 +10,38 @@ body {
 .App {
   text-align: left;
 }
-
+#table {
+  display: flex;
+  margin: 0 auto;
+  width: 100%;
+  background-color: #8d6c6c;
+}
+.col {width: 100%}
+.divCell {
+  display: flexbox;
+  padding: 5px;
+  font-size: calc(6px + 1vmin);
+  margin: 2px;
+  background-color: #342828;
+  text-align: center;
+}
+.headCell {
+  display: flexbox;
+  padding: 5px;
+  height: 50px;
+  font-size: calc(5px + 1vmin);
+  margin: 2px;
+  background-color: #342828;
+  text-align: center;
+}
+.activeDay {
+  display: flexbox;
+  padding: 5px;
+  font-size: calc(5px + 1vmin);
+  margin: 2px;
+  background-color: #ff008c;
+  text-align: center;
+}
 .App-header {
   background-color: #0e0b0b;
   font-size: calc(10px + 1vmin);
@@ -207,4 +238,6 @@ label {
   display: inline-block;
   width: 150px;
 }
-.list {padding: 12px;}
+.list {
+  padding: 12px;
+}
