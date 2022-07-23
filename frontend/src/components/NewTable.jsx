@@ -38,13 +38,16 @@ function NewTable() {
   let dayOfTheWeek = new Date().getDay() - 1;
   let monday = -dayOfTheWeek;
   let newBookingArray = [];
-
+  let startBokingHour;
+  let stopBokingHour;
+  let countHour;
+  let hoursBooked;
   for (let i = 0; i < 7; i++) {
     days[i] = yearList[-TotalDays + thisWeek + i].date;
   }
 
   ////////////////////////////////////////////////////////////////////
-  function handleTimeClick(year, month, obj, date, time) {
+  function handleTimeClick(year, month, obj, date, time, cellId) {
     let strMonth = month;
     let strDate = date;
     if (strMonth.toString().length < 2) strMonth = "0" + strMonth;
@@ -56,8 +59,7 @@ function NewTable() {
       year: year,
       month: month,
       date: date,
-      //hour: hour,
-      //minute: minute,
+      startHour: cellId,
       time: time,
       day: date.day,
     });
@@ -98,20 +100,21 @@ function NewTable() {
         <div className="col">
           <div className="headCell">Time</div>
           {allTime.map((time, i) => {
-            
             return <div className="divCell">{time}</div>;
           })}
         </div>
 
         {days.map((day, numberOfDays) => {
           countHours += 24;
-          let booked = [];
+          let booked = false;
           return (
             <div className="col">
               <div className="headCell">
                 {dayNameArray[numberOfDays]} {yearList[-TotalDays + thisWeek - dayOfTheWeek + numberOfDays].date}
               </div>
+
               {hours.map((hour, a) => {
+                let cellId = a + countHours;
                 let time = `${a}:00`;
                 let tdDate = new Date(`${yearList[-TotalDays].year}-${yearList[-TotalDays + thisWeek].monthInt}-${yearList[-TotalDays + numberOfDays + thisWeek - 5].date} ${time}`);
                 startBookings.map((startBooking, i) => {
@@ -120,6 +123,7 @@ function NewTable() {
                     addHours[0] = 23 - tdDate.getHours();
                     addHours[1] = 23 - (23 - stopBookings[i].getHours());
                   }*/
+
                   if (
                     startBooking.getYear() <= tdDate.getYear() &&
                     stopBookings[i].getYear() >= tdDate.getYear() &&
@@ -132,25 +136,33 @@ function NewTable() {
                     startBooking.getMinutes() <= tdDate.getMinutes() &&
                     stopBookings[i].getMinutes() >= tdDate.getMinutes()
                   ) {
-                    booked[numberOfDays] = true;
+                    startBokingHour = allBookings[i].startHour;
+                    stopBokingHour = allBookings[i].startHour + stopBookings[i].getHours();
+                    countHour = stopBokingHour - startBokingHour;
+                    hoursBooked = [];
+                    for (let i = 0; i < countHour; i++) {
+                      hoursBooked[i] = startBokingHour + i;
+                      if (hoursBooked[i] === cellId) cellId = "booked";
+                    }
                   }
                 });
 
-                if (!booked[numberOfDays]) {
-                  return (
-                    <div key={`cell_${a} ${countHours}`}
-                      id={a + countHours}
-                      className="divCell"
-                      onClick={(e) => {
-                        handleTimeClick(yearList[-TotalDays].year, yearList[-TotalDays + thisWeek].monthInt, e.target, yearList[-TotalDays + numberOfDays + thisWeek - 4].date, time);
-                      }}
-                    >
-                      {a + countHours}
-                    </div>
-                  );
-                } else {
-                  return <div className="divCell">booked</div>;
+                /*if (hoursBooked[1] === cellId) {
+                  let hej = "booked";
                 }
+                */
+                return (
+                  <div
+                    key={`cell_${a} ${countHours}`}
+                    id={cellId}
+                    className="divCell"
+                    onClick={(e) => {
+                      handleTimeClick(yearList[-TotalDays].year, yearList[-TotalDays + thisWeek].monthInt, e.target, yearList[-TotalDays + numberOfDays + thisWeek - 4].date, time, cellId);
+                    }}
+                  >
+                    {cellId}
+                  </div>
+                );
               })}
             </div>
           );

@@ -40,6 +40,7 @@ function App() {
         let StartMinutes = parseInt(startTime[1]);
         startBookingDate[i].setHours(startHours);
         startBookingDate[i].setMinutes(StartMinutes);
+        let startHour = startBookingDate[i].startHour;
 
         stopBookingDate[i] = new Date(booking.stopDate);
         let stopYear = stopBookingDate[i].getFullYear();
@@ -87,6 +88,7 @@ function App() {
         info: info,
         user: user,
         customer: customer,
+        startHour: user,
         room: room,
       }),
     })

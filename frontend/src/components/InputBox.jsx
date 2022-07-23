@@ -111,7 +111,7 @@ function InputBox(props) {
             name="user"
             className="textInput"
             type="text"
-            defaultValue={inputs.user || "User"}
+            value={inputs.user || date.startHour}
             onChange={handleChange}
           />
           <select id="customer" name="customer" onChange={handleChange}>

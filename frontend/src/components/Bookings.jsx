@@ -45,6 +45,10 @@ function Bookings(props) {
               <b>Room: </b>
               {item.room}
             </div>
+            <div key={`startHour${item.startHour}`}>
+              <b>startHour: </b>
+              {item.startHour}
+            </div>
             <div key={`edit${item.id}`}>
               <button>Edit</button>
               <button onClick={() => {handleDelete(item.id)}}>Delete</button>

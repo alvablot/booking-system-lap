@@ -21,6 +21,7 @@ const db = new sqlite3.Database(dbFile, (error) => {
     info TEXT,
     user VARCHAR (255),
     customer VARCHAR (255),
+    startHour INTEGRER,
     room VARCHAR (255))
   `;
 
@@ -39,8 +40,9 @@ const db = new sqlite3.Database(dbFile, (error) => {
         info,
         user,
         customer,
+        startHour,
         room
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       db.run(insertBooking, [
         "Booking Headline",
         "2022-01-02",
@@ -50,6 +52,7 @@ const db = new sqlite3.Database(dbFile, (error) => {
         "Information",
         "User",
         "Customer Corp",
+        0,
         "Room",
       ]);
     }
