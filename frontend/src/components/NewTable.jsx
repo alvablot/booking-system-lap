@@ -15,7 +15,6 @@ function NewTable() {
   const hours = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
   const dayNameArray = ["Monday", "Thusday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   let countHours = -24;
-  let tdDate;
   let tdTime;
   const [allTime, setAllTime] = useRecoilState(allTimeState);
   const [allBookings, setAllBookings] = useRecoilState(allBookingsState);
@@ -26,11 +25,26 @@ function NewTable() {
   const [year, setYear] = useRecoilState(yearState);
   const [date, setDate] = useRecoilState(dateState);
   let [thisMonday, setThisMonday] = useState(date);
-  let yearList = [...yearArray];
-  let date_1 = new Date("01/01/2022");
-  let date_2 = new Date();
-  let difference = date_1.getTime() - date_2.getTime();
-  let TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
+  let [booked, setBooked] = useState(false);
+  //////////////////
+  let now = new Date()
+  let yearList;
+  let date_1;
+  let date_2;
+  let difference;
+  let TotalDays;
+  function initDate(date) {
+    yearList = [...yearArray];
+    date_1 = new Date("2022-01-01");
+    date_2 = date;
+    difference = date_1.getTime() - date_2.getTime();
+    TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
+    return -TotalDays;
+  }
+  initDate(now) 
+
+
+
 
   const [thisWeek, setThisWeek] = useState(0);
   let [inputBox, setInputBox] = useRecoilState(inputBoxState);
@@ -42,10 +56,13 @@ function NewTable() {
   let stopBokingHour;
   let countHour;
   let hoursBooked;
+
   for (let i = 0; i < 7; i++) {
     days[i] = yearList[-TotalDays + thisWeek + i].date;
   }
-
+  let [weekNumber, setWeekNumber] = useState(yearList[-TotalDays].week);
+  //console.log(startBookings)
+  //console.log(stopBookings)
   ////////////////////////////////////////////////////////////////////
   function handleTimeClick(year, month, obj, date, time, cellId) {
     let strMonth = month;
@@ -78,19 +95,19 @@ function NewTable() {
         <button
           id="button-prev"
           onClick={() => {
-            setThisWeek(thisWeek - 7);
+            setWeekNumber(weekNumber - 1), setThisWeek(thisWeek - 7);
           }}
         >
           Previous
         </button>
         <div id="date-prev">
           {" "}
-          {yearList[-TotalDays + thisWeek].month} {yearList[-TotalDays].year} {yearList[-TotalDays + thisWeek].date} Week: {yearList[-TotalDays + thisWeek].date}
+          {yearList[-TotalDays + thisWeek].month} {yearList[-TotalDays].year} {yearList[-TotalDays + thisWeek].date} Week: {weekNumber}
         </div>
         <button
           id="button-next"
           onClick={() => {
-            setThisWeek(thisWeek + 7);
+            setWeekNumber(weekNumber + 1), setThisWeek(thisWeek + 7);
           }}
         >
           Next
@@ -106,7 +123,7 @@ function NewTable() {
 
         {days.map((day, numberOfDays) => {
           countHours += 24;
-          let booked = false;
+
           return (
             <div className="col">
               <div className="headCell">
@@ -114,53 +131,30 @@ function NewTable() {
               </div>
 
               {hours.map((hour, a) => {
+                let kuk1;
+                let kuk2;
+                let countDays = [];
                 let cellId = a + countHours;
                 let time = `${a}:00`;
-                let tdDate = new Date(`${yearList[-TotalDays].year}-${yearList[-TotalDays + thisWeek].monthInt}-${yearList[-TotalDays + numberOfDays + thisWeek - 5].date} ${time}`);
-                startBookings.map((startBooking, i) => {
-                  /*
-                  if (startBookings[i].getDate() === tdDate.getDate() && stopBookings[i].getDate() > tdDate.getDate()) {
-                    addHours[0] = 23 - tdDate.getHours();
-                    addHours[1] = 23 - (23 - stopBookings[i].getHours());
-                  }*/
+                let tdDate = new Date(`${yearList[-TotalDays].year}-${yearList[-TotalDays + thisWeek].monthInt}-${yearList[-TotalDays + thisWeek - dayOfTheWeek + numberOfDays].date} ${time}`);
 
-                  if (
-                    startBooking.getYear() <= tdDate.getYear() &&
-                    stopBookings[i].getYear() >= tdDate.getYear() &&
-                    startBooking.getMonth() <= tdDate.getMonth() &&
-                    stopBookings[i].getMonth() >= tdDate.getMonth() &&
-                    startBooking.getDate() <= tdDate.getDate() &&
-                    stopBookings[i].getDate() >= tdDate.getDate() &&
-                    startBooking.getHours() <= tdDate.getHours() &&
-                    stopBookings[i].getHours() >= tdDate.getHours() &&
-                    startBooking.getMinutes() <= tdDate.getMinutes() &&
-                    stopBookings[i].getMinutes() >= tdDate.getMinutes()
-                  ) {
-                    startBokingHour = allBookings[i].startHour;
-                    stopBokingHour = allBookings[i].startHour + stopBookings[i].getHours();
-                    countHour = stopBokingHour - startBokingHour;
-                    hoursBooked = [];
-                    for (let i = 0; i < countHour; i++) {
-                      hoursBooked[i] = startBokingHour + i;
-                      if (hoursBooked[i] === cellId) cellId = "booked";
-                    }
-                  }
-                });
+                let stopDay;
 
                 /*if (hoursBooked[1] === cellId) {
                   let hej = "booked";
                 }
                 */
+                tdDate = yearList[-TotalDays + thisWeek - dayOfTheWeek + numberOfDays].date;
                 return (
                   <div
                     key={`cell_${a} ${countHours}`}
                     id={cellId}
                     className="divCell"
                     onClick={(e) => {
-                      handleTimeClick(yearList[-TotalDays].year, yearList[-TotalDays + thisWeek].monthInt, e.target, yearList[-TotalDays + numberOfDays + thisWeek - 4].date, time, cellId);
+                      handleTimeClick(yearList[-TotalDays].year, yearList[-TotalDays + thisWeek].monthInt, e.target, tdDate, time, cellId);
                     }}
                   >
-                    {cellId}
+                    {tdDate}
                   </div>
                 );
               })}

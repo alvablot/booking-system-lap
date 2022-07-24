@@ -9,9 +9,11 @@ import Bookings from "./components/Bookings";
 import InputBox from "./components/InputBox";
 import NewTable from "./components/NewTable";
 import Timetable from "./components/Timetable";
+import yearArray from "./yearArray.json";
 const url = "http://localhost:4000";
 
 function App() {
+  console.log(yearArray.length)
   let [allBookings, setAllBookings] = useRecoilState(allBookingsState);
   let [startBookings, setStartBookings] =
     useRecoilState(startBookingsState);
@@ -66,6 +68,7 @@ function App() {
   }, [allBookings, stopBookingDate, startBookingDate]);
 
   function addBooking(elements, form) {
+    
     const headline = form.headline.value;
     const startDate = form.startDate.value;
     const stopDate = form.stopDate.value;
@@ -94,6 +97,7 @@ function App() {
     })
       .then((res) => res.json())
       .then((json) => setAllBookings(json));
+      
   }
 
   function deleteBooking(id) {
