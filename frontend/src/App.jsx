@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { allBookingsState } from "./recoil/allBookings/atom";
 import { startBookingsState } from "./recoil/startBookings/atom";
 import { stopBookingsState } from "./recoil/stopBookings/atom";
+import { bookingDaysState } from "./recoil/bookingDays/atom";
 import { allTimeState } from "./recoil/allTime/atom";
 import Bookings from "./components/Bookings";
 import InputBox from "./components/InputBox";
@@ -13,7 +14,7 @@ import yearArray from "./yearArray.json";
 const url = "http://localhost:4000";
 
 function App() {
-  console.log(yearArray.length)
+  //console.log(yearArray.length)
   let [allBookings, setAllBookings] = useRecoilState(allBookingsState);
   let [startBookings, setStartBookings] =
     useRecoilState(startBookingsState);
@@ -22,7 +23,7 @@ function App() {
   let [bookingId, setBookingId] = useState("");
   let destructedBookingsStart = [{}];
   let destructedBookingsStop = [];
-
+  let [daysBeetwenBookings, setDaysBeetwenBookings] = useRecoilState(bookingDaysState);
   useEffect(() => {
     fetch(`${url}/bookings`)
       .then((res) => res.json())
@@ -30,6 +31,7 @@ function App() {
   }, []);
   let startBookingDate = [];
   let stopBookingDate = [];
+  
   useEffect(() => {
     //if (allBookings[0] !== undefined) {
       allBookings.map((booking, i) => {
@@ -53,10 +55,13 @@ function App() {
         let stopMinutes = parseInt(stopTime[1]);
         stopBookingDate[i].setHours(stopHours);
         stopBookingDate[i].setMinutes(stopMinutes);
+        let daysBetween = [stopBookingDate[i].getDate() - startBookingDate[i].getDate()]
+        setDaysBeetwenBookings([...daysBeetwenBookings, daysBetween[i]])
       });
      // if (stopBookingDate[0] !== undefined || startBookingDate[0] !== undefined) {
         setStartBookings(startBookingDate);
         setStopBookings(stopBookingDate);
+       
       //}
    // }
   }, [allBookings]);

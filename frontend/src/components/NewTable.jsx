@@ -9,6 +9,7 @@ import { monthState } from "../recoil/month/atom";
 import { yearState } from "../recoil/year/atom";
 import { dateState } from "../recoil/date/atom";
 import { inputBoxState } from "../recoil/inputBox/atom";
+import { bookingDaysState } from "../recoil/bookingDays/atom";
 import yearArray from "../yearArray.json";
 
 function NewTable() {
@@ -25,9 +26,10 @@ function NewTable() {
   const [year, setYear] = useRecoilState(yearState);
   const [date, setDate] = useRecoilState(dateState);
   let [thisMonday, setThisMonday] = useState(date);
+  let [daysBeetwenBookings, setDaysBeetwenBookings] = useRecoilState(bookingDaysState);
   let [booked, setBooked] = useState(false);
   //////////////////
-  let now = new Date()
+  let now = new Date();
   let yearList;
   let date_1;
   let date_2;
@@ -41,10 +43,9 @@ function NewTable() {
     TotalDays = Math.ceil(difference / (1000 * 3600 * 24));
     return -TotalDays;
   }
-  initDate(now) 
+  initDate(now);
 
-
-
+  //if(daysBeetwenBookings[0] !== undefined) console.log(daysBeetwenBookings[0]);
 
   const [thisWeek, setThisWeek] = useState(0);
   let [inputBox, setInputBox] = useRecoilState(inputBoxState);
@@ -131,15 +132,36 @@ function NewTable() {
               </div>
 
               {hours.map((hour, a) => {
-                let kuk1;
-                let kuk2;
-                let countDays = [];
                 let cellId = a + countHours;
                 let time = `${a}:00`;
+                let dayCorrection = 0;
+                let adjust = false;
                 let tdDate = new Date(`${yearList[-TotalDays].year}-${yearList[-TotalDays + thisWeek].monthInt}-${yearList[-TotalDays + thisWeek - dayOfTheWeek + numberOfDays].date} ${time}`);
+                let numberOfHours
+                startBookings.map((booking, i) => {
+                  if (stopBookings[i].getDate() > startBookings[i].getDate()) {
+                       numberOfHours = startBookings[i].getDate() + startBookings[i].getDate()
 
-                let stopDay;
-
+                  } 
+                else if(stopBookings[i].getDate() === startBookings[i].getDate()) {
+                    numberOfHours = stopBookings[i].getHours() - startBookings[i].getHours();
+                    
+                  } 
+                  for (let b = dayCorrection; b < numberOfHours; b++) {
+                   if (startBookings[i].getDate() === tdDate.getDate() && startBookings[i].getHours() + b === tdDate.getHours()) {
+                      cellId = "booked";
+                    }
+                    ///////////
+                    if (stopBookings[i].getDate() === tdDate.getDate() && startBookings[i].getHours() - b - 1 === tdDate.getHours()) {
+                      cellId = "booked";
+                    }
+                    if (adjust && stopBookings[i].getDate() === tdDate.getDate() && startBookings[i].getHours()  === tdDate.getHours()) {
+                      cellId = "booked";
+                      console.log(startBookings[i].getHours())
+                    }
+                    ////////////
+                  }
+                });
                 /*if (hoursBooked[1] === cellId) {
                   let hej = "booked";
                 }
@@ -154,7 +176,7 @@ function NewTable() {
                       handleTimeClick(yearList[-TotalDays].year, yearList[-TotalDays + thisWeek].monthInt, e.target, tdDate, time, cellId);
                     }}
                   >
-                    {tdDate}
+                    {cellId}
                   </div>
                 );
               })}
