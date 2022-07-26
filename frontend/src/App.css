@@ -24,6 +24,7 @@ body {
   margin: 2px;
   background-color: #342828;
   text-align: center;
+  height: 30px;
 }
 .headCell {
   display: flexbox;
@@ -34,7 +35,7 @@ body {
   background-color: #342828;
   text-align: center;
 }
-.activeDay {
+.booked {
   display: flexbox;
   padding: 5px;
   font-size: calc(5px + 1vmin);
@@ -126,7 +127,7 @@ a {
   width: 100%;
   padding: 15px;
   z-index: 2;
-  /*display: none;*/
+  display: block;
 }
 .date-label {
   width: 50px;

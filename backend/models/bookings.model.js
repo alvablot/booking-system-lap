@@ -16,8 +16,7 @@ const bookBookingId = "UPDATE books";
 */
 
 const fetchBookingsTable = "SELECT * FROM bookings ORDER BY id DESC";
-const insertBookingRow =
-  "INSERT INTO bookings (headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, room)  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+const insertBookingRow = "INSERT INTO bookings (headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room)  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 const deleteBookingRow = "DELETE FROM bookings WHERE id = ?";
 const updateBookingsRow = "UPDATE bookings";
 
@@ -44,26 +43,32 @@ async function getAll() {
 }
 
 async function addOne(data) {
-  const { headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, room } = data;
+  const { headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room } = data;
   //return data;
-  /*
-  if (!first_name || !last_name || !email || !password) return 400;
-  const existingBooking = await getBooking(
-    `SELECT * FROM users WHERE email = '${email}'`
+  
+
+  const existingStartDate = await getBooking(
+    `SELECT startDate FROM bookings`
   );
-  if (existingBooking !== undefined) {
-    if (email === existingBooking.email) return 409;
-  }
-   */
+console.log(startDate)
+console.log(existingStartDate.startDate)
+
+console.log(startHour)
+//console.log(existingStartDate.startDate)
+
+
+
+
+   
   const query = insertBookingRow;
-  db.run(query, [headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, room]);
+  db.run(query, [headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room]);
   result = initTable(fetchBookingsTable);
   return result;
 }
 
 async function deleteOne(id) {
   const query = `${fetchBookingsTable} WHERE id = '${id}'`;
-  //let result = await initTable(query);  
+  //let result = await initTable(query);
   //console.log(result);
   //if (result.length < 1) return 404;
   db.run(deleteBookingRow, id, (err) => {});
@@ -72,7 +77,7 @@ async function deleteOne(id) {
 }
 
 async function patchOne(id, data) {
-  const { headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, room } = data;
+  const { headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room } = data;
   async function updateBooking(col, data) {
     const result = db.run(
       `${updateBookingsRow}
@@ -80,10 +85,10 @@ async function patchOne(id, data) {
       WHERE id = ?`,
       [data, id]
     );
-   return result;
+    return result;
   }
 
-  if (headline !== undefined) { 
+  if (headline !== undefined) {
     updateBooking("headline", headline);
   }
   if (startDate !== undefined) {
@@ -109,6 +114,9 @@ async function patchOne(id, data) {
   }
   if (startHour !== undefined) {
     updateBooking("startHour", startHour);
+  }
+  if (weekNumber !== undefined) {
+    updateBooking("weekNumber", weekNumber);
   }
   if (room !== undefined) {
     updateBooking("room", room);

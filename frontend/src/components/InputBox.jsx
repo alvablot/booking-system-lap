@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { allBookingsState } from "../recoil/allBookings/atom";
 
-
+import { usersState } from "../recoil/users/atom";
 import { dateState } from "../recoil/date/atom";
 import { inputBoxState } from "../recoil/inputBox/atom";
 import dateList from "../dateList.json";
@@ -13,9 +13,11 @@ function InputBox(props) {
   let [startBookings, setStartBookings] = useRecoilState(startBookingsState);
   let [stopBookings, setStopBookings] = useRecoilState(stopBookingsState);
   const [date, setDate] = useRecoilState(dateState);
+  const [users, setUsers] = useRecoilState(usersState);
   let [inputBox, setInputBox] = useRecoilState(inputBoxState);
   const [inputs, setInputs] = useState({});
-
+  let userName;
+  if (users[0] !== undefined) userName = users[0].username;
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -24,13 +26,11 @@ function InputBox(props) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    //setStartBookings((startBookings) => [...startBookings, event.target.startDate.value]);
-   // console.log(event.target.startDate.value);
     props.addBooking(inputs, event.target);
   };
 
   return (
-    <div id="inputBox" style={{ display: inputBox }}>
+    <div id="inputBox" style={{ display: {inputBox} }}>
       <form onSubmit={handleSubmit}>
         <div id="container">
           <div id="headInput">
@@ -77,7 +77,9 @@ function InputBox(props) {
             <option value="Room3">Room3</option>
             <option value="Room4">Room4</option>
           </select>
-          <input id="user" name="user" className="textInput" type="text" value={inputs.user || date.startHour} onChange={handleChange} />
+          <input id="user" name="user" className="textInput" type="text" defaultValue={userName} onChange={handleChange} />
+          <input id="startHour" name="startHour" className="textInput" readOnly type="hidden" value={0 || date.startHour} />
+          <input id="weekNumber" name="weekNumber" className="textInput" readOnly type="hidden" value={0 || date.weekNumber} />
           <select id="customer" name="customer" onChange={handleChange}>
             <option value="Chose Customer">Chose Customer</option>
             <option value="New customer">New customer</option>
