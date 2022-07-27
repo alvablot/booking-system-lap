@@ -45,24 +45,66 @@ async function getAll() {
 async function addOne(data) {
   const { headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room } = data;
   //return data;
-  
 
-  const existingStartDate = await getBooking(
-    `SELECT startDate FROM bookings`
-  );
-console.log(startDate)
-console.log(existingStartDate.startDate)
-
-console.log(startHour)
-//console.log(existingStartDate.startDate)
-
-
-
-
-   
   const query = insertBookingRow;
   db.run(query, [headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room]);
-  result = initTable(fetchBookingsTable);
+
+  let dbStartDates;
+  let dbStartYear;
+  let dbStartMonth;
+  let dbStartDate;
+  let dbStartTimes;
+  let dbStartTime;
+  let dbStartHour;
+  let dbStartMinute;
+
+  let reqStartDates;
+  let reqStartYear;
+  let reqStartMonth;
+  let reqStartDate;
+  let reqStartTimes;
+  let reqStartTime;
+  let reqStartHour;
+  let reqStartMinute;
+
+  result = await initTable(fetchBookingsTable);
+  result.map((sDate) => {
+
+    dbStartDates = sDate.startDate;
+    dbStartDate = dbStartDates.split("-");
+    dbStartYear = parseInt(dbStartDate[0])
+    dbStartMonth = parseInt(dbStartDate[1])
+    dbStartDate = parseInt(dbStartDate[2])
+
+    dbStartTime = new Date()
+    dbStartTime.setYear(dbStartYear)
+    dbStartTime.setMonth(dbStartMonth)
+    dbStartTime.setDate(dbStartDate)
+    dbStartTimes = sDate.startTime
+    dbStartTimes = dbStartTimes.split(":")
+    dbStartTime.setHours(parseInt(dbStartTimes[0]))
+    dbStartTime.setMinutes(parseInt(dbStartTimes[1]))
+
+    reqStartDates = startDate.split("-");
+    reqStartYear = parseInt(reqStartDates[0])
+    reqStartMonth = parseInt(reqStartDates[1])
+    reqStartDate = parseInt(reqStartDates[2])
+
+    reqStartTime = startTime.split(":");
+    reqStartHour = parseInt(reqStartTime[0])
+    reqStartMinute = parseInt(reqStartTime[1])
+
+    reqStartTime = new Date()
+    reqStartTime.setYear(reqStartYear)
+    reqStartTime.setMonth(reqStartMonth)
+    reqStartTime.setDate(reqStartDate)
+    reqStartTime.setHours(reqStartHour)
+    reqStartTime.setMinutes(reqStartMinute)
+    
+    console.log(reqStartTime < dbStartTime)
+
+  });
+  
   return result;
 }
 

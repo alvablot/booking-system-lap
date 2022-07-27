@@ -55,6 +55,7 @@ function NewTable() {
   let stopBokingHour;
   let countHour;
   let hoursBooked;
+  let countWeek = 0;
 
   for (let i = 0; i < 7; i++) {
     days[i] = yearList[-TotalDays + thisWeek + i].date;
@@ -67,6 +68,7 @@ function NewTable() {
     if (strMonth.toString().length < 2) strMonth = "0" + strMonth;
     if (strDate.toString().length < 2) strDate = "0" + strDate;
     const dateStamp = `${year}-${strMonth}-${strDate}`;
+    
 
     setDate({
       dateStamp: dateStamp,
@@ -78,9 +80,9 @@ function NewTable() {
       day: date.day,
       weekNumber: weekNumber,
     });
-    console.log(weekNumber);
     setInputBox("block");
     
+
   }
   /////////////////////////////////////////////////////////////////////
   useEffect(() => {
@@ -93,19 +95,18 @@ function NewTable() {
         <button
           id="button-prev"
           onClick={() => {
-            setWeekNumber(weekNumber - 1), setThisWeek(thisWeek - 7);
+            countWeek--, setWeekNumber(weekNumber - 1), setThisWeek(thisWeek - 7);
           }}
         >
           Previous
         </button>
         <div id="date-prev">
-          {" "}
-          {yearList[-TotalDays + thisWeek].month} {yearList[-TotalDays].year} {yearList[-TotalDays + thisWeek].date} Week: {weekNumber}
+          {yearList[-TotalDays + thisWeek].month} {yearList[-TotalDays].year} {yearList[-TotalDays + thisWeek + countWeek].week } Week: {}
         </div>
         <button
           id="button-next"
           onClick={() => {
-            setWeekNumber(weekNumber + 1), setThisWeek(thisWeek + 7);
+            countWeek++, setWeekNumber(weekNumber + 1), setThisWeek(thisWeek + 7);
           }}
         >
           Next
@@ -172,10 +173,8 @@ function NewTable() {
                   <div
                     key={`cell_${a}_${countHours}`}
                     id={cellId}
-                    className={`divCell ${bookmark}`}
-                    onMouseDown={(e) => {e.target.style.background = "#8d6c6c";}}
-                    onMouseUp={(e) => {e.target.style.background = "#342828";}}
-                    onClick={(e) => {
+                    className={"divCell"}
+                    onClick={(e) => {e.target.style.backgroundColor = "#ff008c";
                       handleTimeClick(yearList[-TotalDays].year, yearList[-TotalDays + thisWeek].monthInt, e.target, tdDate, time, cellId, weekNumber);
                     }}
                   >
