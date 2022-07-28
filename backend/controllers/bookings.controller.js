@@ -12,8 +12,6 @@ async function getBookings(req, res) {
 async function postBooking(req, res) {
   let data = req.body;
   let result = await model.addOne(data);
-  if (result === 400)
-    return res.status(400).send("Du måste skicka med all input");
   if (result === 409) return res.status(409).send("Bookningen finns redan");
   res.json(result);
 }

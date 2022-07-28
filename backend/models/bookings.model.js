@@ -46,8 +46,7 @@ async function addOne(data) {
   const { headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room } = data;
   //return data;
 
-  const query = insertBookingRow;
-  db.run(query, [headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room]);
+
 
   let dbStartDates;
   let dbStartYear;
@@ -67,44 +66,108 @@ async function addOne(data) {
   let reqStartHour;
   let reqStartMinute;
 
+  let dbStopDates;
+  let dbStopYear;
+  let dbStopMonth;
+  let dbStopDate;
+  let dbStopTimes;
+  let dbStopTime;
+  let dbStopHour;
+  let dbStopMinute;
+
+  let reqStopDates;
+  let reqStopYear;
+  let reqStopMonth;
+  let reqStopDate;
+  let reqStopTimes;
+  let reqStopTime;
+  let reqStopHour;
+  let reqStopMinute;
+
+  let TimeConflict = false;
+
   result = await initTable(fetchBookingsTable);
   result.map((sDate) => {
-
     dbStartDates = sDate.startDate;
     dbStartDate = dbStartDates.split("-");
-    dbStartYear = parseInt(dbStartDate[0])
-    dbStartMonth = parseInt(dbStartDate[1])
-    dbStartDate = parseInt(dbStartDate[2])
+    dbStartYear = parseInt(dbStartDate[0]);
+    dbStartMonth = parseInt(dbStartDate[1]);
+    dbStartDate = parseInt(dbStartDate[2]);
 
-    dbStartTime = new Date()
-    dbStartTime.setYear(dbStartYear)
-    dbStartTime.setMonth(dbStartMonth)
-    dbStartTime.setDate(dbStartDate)
-    dbStartTimes = sDate.startTime
-    dbStartTimes = dbStartTimes.split(":")
-    dbStartTime.setHours(parseInt(dbStartTimes[0]))
-    dbStartTime.setMinutes(parseInt(dbStartTimes[1]))
+    dbStartTime = new Date();
+    dbStartTime.setYear(dbStartYear);
+    dbStartTime.setMonth(dbStartMonth);
+    dbStartTime.setDate(dbStartDate);
+
+    dbStartTimes = sDate.startTime;
+    dbStartTimes = dbStartTimes.split(":");
+    dbStartTime.setHours(parseInt(dbStartTimes[0]));
+    dbStartTime.setMinutes(parseInt(dbStartTimes[1]));
 
     reqStartDates = startDate.split("-");
-    reqStartYear = parseInt(reqStartDates[0])
-    reqStartMonth = parseInt(reqStartDates[1])
-    reqStartDate = parseInt(reqStartDates[2])
+    reqStartYear = parseInt(reqStartDates[0]);
+    reqStartMonth = parseInt(reqStartDates[1]);
+    reqStartDate = parseInt(reqStartDates[2]);
 
     reqStartTime = startTime.split(":");
-    reqStartHour = parseInt(reqStartTime[0])
-    reqStartMinute = parseInt(reqStartTime[1])
+    reqStartHour = parseInt(reqStartTime[0]);
+    reqStartMinute = parseInt(reqStartTime[1]);
 
-    reqStartTime = new Date()
-    reqStartTime.setYear(reqStartYear)
-    reqStartTime.setMonth(reqStartMonth)
-    reqStartTime.setDate(reqStartDate)
-    reqStartTime.setHours(reqStartHour)
-    reqStartTime.setMinutes(reqStartMinute)
-    
-    console.log(reqStartTime < dbStartTime)
+    reqStartTime = new Date();
+    reqStartTime.setYear(reqStartYear);
+    reqStartTime.setMonth(reqStartMonth);
+    reqStartTime.setDate(reqStartDate);
+    reqStartTime.setHours(reqStartHour);
+    reqStartTime.setMinutes(reqStartMinute);
+
+    dbStopDates = sDate.stopDate;
+    dbStopDate = dbStopDates.split("-");
+    dbStopYear = parseInt(dbStopDate[0]);
+    dbStopMonth = parseInt(dbStopDate[1]);
+    dbStopDate = parseInt(dbStopDate[2]);
+
+    dbStopTime = new Date();
+    dbStopTime.setYear(dbStopYear);
+    dbStopTime.setMonth(dbStopMonth);
+    dbStopTime.setDate(dbStopDate);
+    dbStopTimes = sDate.stopTime;
+    dbStopTimes = dbStopTimes.split(":");
+    dbStopTime.setHours(parseInt(dbStopTimes[0]));
+    dbStopTime.setMinutes(parseInt(dbStopTimes[1]));
+
+    reqStopDates = stopDate.split("-");
+    reqStopYear = parseInt(reqStopDates[0]);
+    reqStopMonth = parseInt(reqStopDates[1]);
+    reqStopDate = parseInt(reqStopDates[2]);
+
+    reqStopTime = stopTime.split(":");
+    reqStopHour = parseInt(reqStopTime[0]);
+    reqStopMinute = parseInt(reqStopTime[1]);
+
+    reqStopTime = new Date();
+    reqStopTime.setYear(reqStopYear);
+    reqStopTime.setMonth(reqStopMonth);
+    reqStopTime.setDate(reqStopDate);
+    reqStopTime.setHours(reqStopHour);
+    reqStopTime.setMinutes(reqStopMinute);
+
 
   });
-  
+  if (
+    reqStartTime.getYear() === dbStartTime.getYear() && 
+    reqStopTime.getMonth() <= dbStopTime.getMonth() &&
+    reqStartTime.getMonth() >= dbStartTime.getMonth() && 
+    reqStopTime.getDate() <= dbStopTime.getDate() &&
+    reqStartTime.getDate() >= dbStartTime.getDate() &&
+    reqStopTime.getHours() <= dbStopTime.getHours() &&
+    reqStartTime.getHours() >= dbStartTime.getHours()
+    ) {
+    TimeConflict = true;
+    }
+  if(TimeConflict) return 409
+
+  const query = insertBookingRow;
+  db.run(query, [headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room]);
   return result;
 }
 
