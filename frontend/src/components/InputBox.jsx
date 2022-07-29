@@ -78,8 +78,8 @@ function InputBox(props) {
             <option value="Room4">Room4</option>
           </select>
           <input id="user" name="user" className="textInput" type="text" defaultValue={userName} onChange={handleChange} />
-          <input id="startHour" name="startHour" className="textInput"  type="hidden" value={inputs.startHour  || date.startHour} />
-          <input id="weekNumber" name="weekNumber" className="textInput"  type="hidden" value={inputs.weekNumber  || date.weekNumber} />
+          <input id="startHour" name="startHour" className="textInput" readOnly type="hidden" value={0 || date.startHour} />
+          <input id="weekNumber" name="weekNumber" className="textInput" readOnly type="hidden" value={0 || date.weekNumber} />
           <select id="customer" name="customer" onChange={handleChange}>
             <option value="Chose Customer">Chose Customer</option>
             <option value="New customer">New customer</option>
