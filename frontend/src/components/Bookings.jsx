@@ -19,15 +19,7 @@ function Bookings(props) {
               {item.id}
             </div>
             <div key={`headline${item.id}`}>
-              <b>{item.headline}</b>
-            </div>
-            <div key={`startDate${item.id}`}>
-              <b>From: </b>
-              {item.startDate} {item.startTime}
-            </div>
-            <div key={`stopDate${item.id}`}>
-              <b>To: </b>
-              {item.stopDate} {item.stopTime}
+              <b>Headline: </b>{item.headline}
             </div>
             <div key={`info${item.id}`}>
               <b>Info: </b>
@@ -37,14 +29,26 @@ function Bookings(props) {
               <b>User: </b>
               {item.user}
             </div>
-            <div key={`customer${item.id}`}>
-              <b>Customer: </b>
-              {item.customer}
-            </div>
             <div key={`room${item.id}`}>
               <b>Room: </b>
               {item.room}
             </div>
+            <div key={`customer${item.id}`}>
+              <b>Customer: </b>
+              {item.customer}
+            </div>
+            <div key={`startDate${item.id}`}>
+              <b>Startdate: </b>
+              {item.startDateStamp} {item.startTime}
+            </div>
+            <div key={`stopDate${item.id}`}>
+              <b>Stopdate: </b>
+              {item.stopDateStamp} {item.stopTime}
+            </div>
+
+
+
+
             <div key={`startHour${item.startHour}`}>
               <b>startHour: </b>
               {item.startHour}

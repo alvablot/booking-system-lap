@@ -1,11 +1,11 @@
-const uuid = require("uuid");
-const md5 = require("md5");
-const jwt = require("jsonwebtoken");
+const uuid = require('uuid')
+const md5 = require('md5')
+const jwt = require('jsonwebtoken')
 
-const db = require("../database.js");
-let users;
-let token = false;
-let activeBooking = {};
+const db = require('../database.js')
+let users
+let token = false
+let activeBooking = {}
 /*
 const fetchBooksTable = "SELECT * FROM books";
 const fetchBooks = "SELECT * FROM books";
@@ -15,37 +15,58 @@ const fetchBooks = "SELECT * FROM books";
 const bookBookingId = "UPDATE books";
 */
 
-const fetchBookingsTable = "SELECT * FROM bookings ORDER BY id DESC";
-const insertBookingRow = "INSERT INTO bookings (headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room)  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-const deleteBookingRow = "DELETE FROM bookings WHERE id = ?";
-const updateBookingsRow = "UPDATE bookings";
+const fetchBookingsTable = 'SELECT * FROM bookings ORDER BY id DESC'
+const insertBookingRow =
+  'INSERT INTO bookings (headline, info, user, room, customer, startDateStamp, stopDateStamp, startYear, startMonth, startDate, stopYear, stopMonth, stopDate, day, startHour, stopHour, startTime, stopTime, cellHour, weekNumber) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+const deleteBookingRow = 'DELETE FROM bookings WHERE id = ?'
+const updateBookingsRow = 'UPDATE bookings'
 
-function initTable(query) {
+function initTable (query) {
   return new Promise((resolve, reject) => {
     db.all(query, (err, rows) => {
-      resolve(rows);
-    });
-  });
+      resolve(rows)
+    })
+  })
 }
 
-function getBooking(query) {
+function getBooking (query) {
   return new Promise((resolve, reject) => {
     db.get(query, (err, rows) => {
-      resolve(rows);
-    });
-  });
+      resolve(rows)
+    })
+  })
 }
 
-async function getAll() {
-  const query = fetchBookingsTable;
-  const result = await initTable(query);
-  return result;
+async function getAll () {
+  const query = fetchBookingsTable
+  const result = await initTable(query)
+  return result
 }
 
-async function addOne(data) {
-  const { headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room } = data;
-  //return data;
-
+async function addOne (data) {
+  const {
+    headline,
+    info,
+    user,
+    room,
+    customer,
+    startDateStamp,
+    stopDateStamp,
+    startYear,
+    startMonth,
+    startDate,
+    stopYear,
+    stopMonth,
+    stopDate,
+    day,
+    startHour,
+    stopHour,
+    startTime,
+    stopTime,
+    cellHour,
+    weekNumber
+  } = data
+  /*
 
 
   let dbStartDates;
@@ -165,69 +186,145 @@ async function addOne(data) {
     TimeConflict = true;
     }
   if(TimeConflict) return 409
+*/
 
-  const query = insertBookingRow;
-  db.run(query, [headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room]);
-  return result;
+  const existingStartDate = await getBooking(`SELECT startDate FROM bookings`)
+  console.log(startDate)
+  console.log(existingStartDate.startDate)
+
+  console.log(startHour)
+  //console.log(existingStartDate.startDate)
+
+  const query = insertBookingRow
+  db.run(query, [
+    headline,
+    info,
+    user,
+    room,
+    customer,
+    startDateStamp,
+    stopDateStamp,
+    startYear,
+    startMonth,
+    startDate,
+    stopYear,
+    stopMonth,
+    stopDate,
+    day,
+    startHour,
+    stopHour,
+    startTime,
+    stopTime,
+    cellHour,
+    weekNumber
+  ])
+  result = initTable(fetchBookingsTable)
+  return result
 }
 
-async function deleteOne(id) {
-  const query = `${fetchBookingsTable} WHERE id = '${id}'`;
+async function deleteOne (id) {
+  const query = `${fetchBookingsTable} WHERE id = '${id}'`
   //let result = await initTable(query);
   //console.log(result);
   //if (result.length < 1) return 404;
-  db.run(deleteBookingRow, id, (err) => {});
-  users = initTable(fetchBookingsTable);
-  return users;
+  db.run(deleteBookingRow, id, err => {})
+  users = initTable(fetchBookingsTable)
+  return users
 }
 
-async function patchOne(id, data) {
-  const { headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room } = data;
-  async function updateBooking(col, data) {
+async function patchOne (id, data) {
+  const {
+    headline,
+    info,
+    user,
+    room,
+    customer,
+    startDateStamp,
+    stopDateStamp,
+    startYear,
+    startMonth,
+    startDate,
+    stopYear,
+    stopMonth,
+    stopDate,
+    day,
+    startHour,
+    stopHour,
+    startTime,
+    stopTime,
+    cellHour,
+    weekNumber
+  } = data
+  async function updateBooking (col, data) {
     const result = db.run(
       `${updateBookingsRow}
       SET ${col} = ?
       WHERE id = ?`,
       [data, id]
-    );
-    return result;
+    )
+    return result
   }
 
   if (headline !== undefined) {
-    updateBooking("headline", headline);
-  }
-  if (startDate !== undefined) {
-    updateBooking("startDate", startDate);
-  }
-  if (stopDate !== undefined) {
-    updateBooking("stopDate", stopDate);
-  }
-  if (startTime !== undefined) {
-    updateBooking("startTime", startTime);
-  }
-  if (stopTime !== undefined) {
-    updateBooking("stopTime", stopTime);
+    updateBooking('headline', headline)
   }
   if (info !== undefined) {
-    updateBooking("info", info);
+    updateBooking('info', info)
   }
   if (user !== undefined) {
-    updateBooking("user", user);
-  }
-  if (customer !== undefined) {
-    updateBooking("customer", customer);
-  }
-  if (startHour !== undefined) {
-    updateBooking("startHour", startHour);
-  }
-  if (weekNumber !== undefined) {
-    updateBooking("weekNumber", weekNumber);
+    updateBooking('user', user)
   }
   if (room !== undefined) {
-    updateBooking("room", room);
+    updateBooking('room', room)
   }
-  const result = await initTable(fetchBookingsTable);
-  return result;
+  if (customer !== undefined) {
+    updateBooking('customer', customer)
+  }
+  if (startDateStamp !== undefined) {
+    updateBooking('startDateStamp', startDateStamp)
+  }
+  if (stopDateStamp !== undefined) {
+    updateBooking('stopDateStamp', stopDateStamp)
+  }
+  if (startYear !== undefined) {
+    updateBooking('startYear', startYear)
+  }
+  if (startMonth !== undefined) {
+    updateBooking('startMonth', startMonth)
+  }
+  if (startDate !== undefined) {
+    updateBooking('startDate', startDate)
+  }
+  if (stopYear !== undefined) {
+    updateBooking('stopYear', stopYear)
+  }
+  if (stopMonth !== undefined) {
+    updateBooking('stopMonth', stopMonth)
+  }
+  if (stopDate !== undefined) {
+    updateBooking('stopDate', stopDate)
+  }
+  if (day !== undefined) {
+    updateBooking('day', day)
+  }
+  if (startHour !== undefined) {
+    updateBooking('startHour', startHour)
+  }
+  if (startTime !== undefined) {
+    updateBooking('startTime', startTime)
+  }
+  if (stopTime !== undefined) {
+    updateBooking('stopTime', stopTime)
+  }
+  if (cellHour !== undefined) {
+    updateBooking('cellHour', cellHour)
+  }
+  if (weekNumber !== undefined) {
+    updateBooking('weekNumber', weekNumber)
+  }
+
+  const result = await initTable(fetchBookingsTable)
+  return result
 }
 /*
 async function borrowedBooks(id) {
@@ -342,7 +439,7 @@ module.exports = {
   getAll,
   addOne,
   deleteOne,
-  patchOne,
+  patchOne
   /*
   getOne,
   
@@ -353,4 +450,4 @@ module.exports = {
   updateOne,
   
   */
-};
+}

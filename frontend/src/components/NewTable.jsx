@@ -9,6 +9,7 @@ import { monthState } from "../recoil/month/atom";
 import { yearState } from "../recoil/year/atom";
 import { dateState } from "../recoil/date/atom";
 import { inputBoxState } from "../recoil/inputBox/atom";
+import { inputState } from "../recoil/input/atom";
 import { bookingDaysState } from "../recoil/bookingDays/atom";
 import yearArray from "../yearArray.json";
 
@@ -21,10 +22,11 @@ function NewTable() {
   const [allBookings, setAllBookings] = useRecoilState(allBookingsState);
   let [startBookings, setStartBookings] = useRecoilState(startBookingsState);
   let [stopBookings, setStopBookings] = useRecoilState(stopBookingsState);
+  const [inputs, setInputs] = useRecoilState(inputState);
   const [week, setWeek] = useRecoilState(weekState);
   const [month, setMonth] = useRecoilState(monthState);
   const [year, setYear] = useRecoilState(yearState);
-  const [date, setDate] = useRecoilState(dateState);
+  let [date, setDate] = useRecoilState(dateState);
   let [thisMonday, setThisMonday] = useState(date);
   let [daysBeetwenBookings, setDaysBeetwenBookings] = useRecoilState(bookingDaysState);
   let [booked, setBooked] = useState(false);
@@ -62,14 +64,13 @@ function NewTable() {
   }
   let [weekNumber, setWeekNumber] = useState(yearList[-TotalDays].week);
   ////////////////////////////////////////////////////////////////////
-  function handleTimeClick(year, month, obj, date, time, cellId, weekNumber) {
+  function handleTimeClick(year, month, obj, dateArg, time, cellId, weekNumber) {
     let strMonth = month;
-    let strDate = date;
+    let strDate = dateArg;
     if (strMonth.toString().length < 2) strMonth = "0" + strMonth;
     if (strDate.toString().length < 2) strDate = "0" + strDate;
     const dateStamp = `${year}-${strMonth}-${strDate}`;
     
-
     setDate({
       dateStamp: dateStamp,
       year: year,
@@ -81,14 +82,15 @@ function NewTable() {
       weekNumber: weekNumber,
     });
     setInputBox("block");
-    
-
+    //console.log(date)  
   }
+  //console.log(date);
   /////////////////////////////////////////////////////////////////////
+  /*
   useEffect(() => {
     setDate(date);
   }, [date]);
-
+*/
   return (
     <div id="timetable-wrap">
       <div className="time-table-head">
@@ -101,7 +103,7 @@ function NewTable() {
           Previous
         </button>
         <div id="date-prev">
-          {yearList[-TotalDays + thisWeek].month} {yearList[-TotalDays].year} {yearList[-TotalDays + thisWeek + countWeek].week } Week: {}
+          {yearList[-TotalDays + thisWeek + countWeek + 1].month} {yearList[-TotalDays].year} {yearList[-TotalDays + thisWeek + countWeek].week} Week: {}
         </div>
         <button
           id="button-next"
@@ -136,7 +138,7 @@ function NewTable() {
               {hours.map((hour, a) => {
                 let bookmark = "";
                 let cellId = a + countHours;
-                let time = `${a}:00`;
+                let time = allTime[a];
                 let dayCorrection = 0;
                 let adjust = false;
                 let tdDate = new Date(`${yearList[-TotalDays].year}-${yearList[-TotalDays + thisWeek].monthInt}-${yearList[-TotalDays + thisWeek - dayOfTheWeek + numberOfDays].date} ${time}`);
@@ -174,7 +176,8 @@ function NewTable() {
                     key={`cell_${a}_${countHours}`}
                     id={cellId}
                     className={"divCell"}
-                    onClick={(e) => {e.target.style.backgroundColor = "#ff008c";
+                    onClick={(e) => {
+                      e.target.style.backgroundColor = "#ff008c";
                       handleTimeClick(yearList[-TotalDays].year, yearList[-TotalDays + thisWeek].monthInt, e.target, tdDate, time, cellId, weekNumber);
                     }}
                   >
