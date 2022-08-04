@@ -87,7 +87,7 @@ function App() {
   //console.log(allBookings)
 
   function addBooking() {
-    //console.log(date.headline) 
+    console.log(date.headline) 
    
     //console.log(elements)
     /*

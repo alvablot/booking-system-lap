@@ -31,7 +31,9 @@ function InputBox(props) {
     const value = event.target.value;
     setInputs((values) => ({ ...values, [name]: value }));
   };
-
+//useEffect(()=>{
+  //setDate()
+//},[])
 
   function handleSubmit(e){
     e.preventDefault() ;
