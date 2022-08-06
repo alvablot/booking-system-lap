@@ -5,7 +5,7 @@ import { allBookingsState } from "../recoil/allBookings/atom";
 import { usersState } from "../recoil/users/atom";
 import { dateState } from "../recoil/date/atom";
 import { inputBoxState } from "../recoil/inputBox/atom";
-import dateList from "../dateList.json";
+//import dateList from "../dateList.json";
 import { startBookingsState } from "../recoil/startBookings/atom";
 import { stopBookingsState } from "../recoil/stopBookings/atom";
 

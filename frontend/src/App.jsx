@@ -10,7 +10,7 @@ import { allTimeState } from "./recoil/allTime/atom";
 import Bookings from "./components/Bookings";
 import InputBox from "./components/InputBox";
 import NewTable from "./components/NewTable";
-import Timetable from "./components/Timetable";
+//import Timetable from "./components/Timetable";
 import yearArray from "./yearArray.json";
 const url = "http://localhost:4000";
 
