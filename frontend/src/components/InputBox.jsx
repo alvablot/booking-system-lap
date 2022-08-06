@@ -52,7 +52,7 @@ function InputBox (props) {
     stopTimes = e.target.stopTime.value.split(':')
     stopTimes[0] = parseInt(stopTimes[0])
     stopTimes[1] = parseInt(stopTimes[1])
-
+    
     setDate({
       headline: e.target.headline.value,
       info: e.target.info.value,
@@ -66,12 +66,21 @@ function InputBox (props) {
       startDate: startDates[2],
       stopYear: stopDates[0],
       stopMonth: stopDates[1],
-      stopDate: stopDates[2]
+      stopDate: stopDates[2],
+
+      //day: date.day,
+     //hour: startTimes[0],
+      //stopHour: startTimes[0] + 1,
+      startMinute: startTimes[1],
+      stopMinute: stopTimes[1],
+      startTime: e.target.startTime.value,
+      stopTime: e.target.stopTime.value,
       //startHour: cellId,
       //time: time,
-      //day: date.day,
+     // day: date.day,
       //weekNumber: weekNumber,
     })
+    console.log(date)
     props.addBooking()
   }
   //})

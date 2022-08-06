@@ -12,7 +12,6 @@ import Bookings from './components/Bookings'
 import InputBox from './components/InputBox'
 import NewTable from './components/NewTable'
 import { dateState } from './recoil/date/atom'
-import Timetable from './components/Timetable'
 import yearArray from './yearArray.json'
 const url = 'http://localhost:4000'
 
@@ -87,26 +86,8 @@ function App () {
   }, [allBookings, stopBookingDate, startBookingDate]);
 */
   //console.log(allBookings)
-
   function addBooking () {
     console.log(date)
-
-    //console.log(elements)
-    /*
-    let headline;
-    if (form.headline.value !== undefined) headline = form.headline.value;
-    const startDate = f orm.startDate.value;
-    const stopDate = form.stopDate.value;
-    const startTime = form.startTime.value;
-    const stopTime = form.stopTime.value;
-    let info;
-    if (form.info.value !== undefined) info = form.info.value;
-    const user = form.user.value;
-    const startHour = form.startHour.value;
-    const customer = form.customer.value;
-    let weekNumber = form.weekNumber.value;
-    const room = form.room.value;
-*/
 
     fetch(`${url}/booking`, {
       method: 'POST',
@@ -125,10 +106,10 @@ function App () {
         stopYear: date.stopYear,
         stopMonth: date.stopMonth,
         stopDate: date.stopDate,
-        //startHour: cellId,
-        //time: time,
-        //day: date.day,
-        //weekNumber: weekNumber,
+        startHour: date.startHour,
+        time: date.time,
+        day: date.day,
+        weekNumber: date.weekNumber,
       })
     })
       .then(res => res.json())
@@ -174,8 +155,7 @@ function App () {
     <div className='App'>
       <header className='App-header'>
         <InputBox addBooking={addBooking} />
-        {/* <NewTable />
-        <Timetable />*/}
+        <NewTable />
         <br />
         <Bookings deleteBooking={deleteBooking} />
       </header>
