@@ -1,48 +1,50 @@
-import "./App.css";
-import { useState, useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { allBookingsState } from "./recoil/allBookings/atom";
-import { startBookingsState } from "./recoil/startBookings/atom";
-import { stopBookingsState } from "./recoil/stopBookings/atom";
-import { bookingDaysState } from "./recoil/bookingDays/atom";
-import { usersState } from "./recoil/users/atom";
-import { inputState } from "./recoil/input/atom";
-import { allTimeState } from "./recoil/allTime/atom";
-import Bookings from "./components/Bookings";
-import InputBox from "./components/InputBox";
-import NewTable from "./components/NewTable";
-import { dateState } from "./recoil/date/atom";
-import Timetable from "./components/Timetable";
-import yearArray from "./yearArray.json";
-const url = "http://localhost:4000";
+import './App.css'
+import { useState, useEffect } from 'react'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { allBookingsState } from './recoil/allBookings/atom'
+import { startBookingsState } from './recoil/startBookings/atom'
+import { stopBookingsState } from './recoil/stopBookings/atom'
+import { bookingDaysState } from './recoil/bookingDays/atom'
+import { usersState } from './recoil/users/atom'
+import { inputState } from './recoil/input/atom'
+import { allTimeState } from './recoil/allTime/atom'
+import Bookings from './components/Bookings'
+import InputBox from './components/InputBox'
+import NewTable from './components/NewTable'
+import { dateState } from './recoil/date/atom'
+import Timetable from './components/Timetable'
+import yearArray from './yearArray.json'
+const url = 'http://localhost:4000'
 
-function App() {
+function App () {
   //console.log(yearArray.length)
-  let [allBookings, setAllBookings] = useRecoilState(allBookingsState);
+  let [allBookings, setAllBookings] = useRecoilState(allBookingsState)
   //let [startBookings, setStartBookings] = useRecoilState(startBookingsState);
-  let [stopBookings, setStopBookings] = useRecoilState(stopBookingsState);
-  let [bookingId, setBookingId] = useState("");
-  const [inputs, setInputs] = useRecoilState(inputState);
-  let destructedBookingsStart = [{}];
-  let destructedBookingsStop = [];
-  let [daysBeetwenBookings, setDaysBeetwenBookings] = useRecoilState(bookingDaysState);
-  let [users, setUsers] = useRecoilState(usersState);
-  let [date, setDate] = useRecoilState(dateState);
+  let [stopBookings, setStopBookings] = useRecoilState(stopBookingsState)
+  let [bookingId, setBookingId] = useState('')
+  const [inputs, setInputs] = useRecoilState(inputState)
+  let destructedBookingsStart = [{}]
+  let destructedBookingsStop = []
+  let [daysBeetwenBookings, setDaysBeetwenBookings] = useRecoilState(
+    bookingDaysState
+  )
+  let [users, setUsers] = useRecoilState(usersState)
+  let [date, setDate] = useRecoilState(dateState)
 
   useEffect(() => {
     fetch(`${url}/users`)
-      .then((res) => res.json())
-      .then((json) => setUsers(json));
-  }, []);
+      .then(res => res.json())
+      .then(json => setUsers(json))
+  }, [])
 
   useEffect(() => {
     fetch(`${url}/bookings`)
-      .then((res) => res.json())
-      .then((json) => setAllBookings(json));
-  }, []);
-  let startBookingDate = [];
-  let stopBookingDate = [];
-/*
+      .then(res => res.json())
+      .then(json => setAllBookings(json))
+  }, [])
+  let startBookingDate = []
+  let stopBookingDate = []
+  /*
   useEffect(() => {
     //if (allBookings[0] !== undefined) {
     allBookings.map((booking, i) => {
@@ -77,7 +79,7 @@ function App() {
     // }
   }, [allBookings]);
 */
-/*
+  /*
   useEffect(() => {
     setStopBookings;
     setStartBookings;
@@ -86,14 +88,14 @@ function App() {
 */
   //console.log(allBookings)
 
-  function addBooking() {
-    console.log(date.headline) 
-   
+  function addBooking () {
+    console.log(date)
+
     //console.log(elements)
     /*
     let headline;
     if (form.headline.value !== undefined) headline = form.headline.value;
-    const startDate = form.startDate.value;
+    const startDate = f orm.startDate.value;
     const stopDate = form.stopDate.value;
     const startTime = form.startTime.value;
     const stopTime = form.stopTime.value;
@@ -107,26 +109,32 @@ function App() {
 */
 
     fetch(`${url}/booking`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        headline: date.headline,/*
-        startDate: startDate,
-        stopDate: stopDate,
-        startTime: startTime,
-        stopTime: stopTime,
-        info: info,
-        user: user,
-        customer: customer,
-        startHour: startHour,
-        weekNumber: weekNumber,
-        room: room,*/
-      }),
+        headline: date.headline,
+        info: date.info,
+        user: date.user,
+        room: date.room,
+        customer: date.customer,
+        startDateStamp: date.startDate,
+        stopDateStamp: date.stopDate,
+        startYear: date.startYear,
+        startMonth: date.startMonth,
+        startDate: date.startDate,
+        stopYear: date.stopYear,
+        stopMonth: date.stopMonth,
+        stopDate: date.stopDate,
+        //startHour: cellId,
+        //time: time,
+        //day: date.day,
+        //weekNumber: weekNumber,
+      })
     })
-      .then((res) => res.json())
-      .then((json) => setAllBookings(json));
+      .then(res => res.json())
+      .then(json => setAllBookings(json))
 
-/*
+    /*
     let theNewCoolStartDate = [];
     theNewCoolStartDate = new Date();
 
@@ -155,22 +163,23 @@ function App() {
     });*/
   }
 
-  function deleteBooking(id) {
-    fetch(`${url}/booking/${id}`, { method: "DELETE" })
-      .then((res) => res.json())
-      .then((json) => setAllBookings(json));
+  function deleteBooking (id) {
+    fetch(`${url}/booking/${id}`, { method: 'DELETE' })
+      .then(res => res.json())
+      .then(json => setAllBookings(json))
   }
+  let userName
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <div className='App'>
+      <header className='App-header'>
         <InputBox addBooking={addBooking} />
-       {/* <NewTable />
+        {/* <NewTable />
         <Timetable />*/}
         <br />
         <Bookings deleteBooking={deleteBooking} />
       </header>
     </div>
-  );
+  )
 }
-export default App;
+export default App

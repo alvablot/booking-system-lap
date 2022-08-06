@@ -52,7 +52,7 @@ export const dateState = atom({
     stopMinute: minute,
     startTime: startTimeStamp,
     stopTime: stopTimeStamp,
-    startHour: start,
+    startHour: 0,
 
     weekNumber: 0,
   },
