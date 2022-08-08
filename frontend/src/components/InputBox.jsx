@@ -29,7 +29,7 @@ function InputBox (props) {
     const name = event.target.name
     const value = event.target.value
     setInputs(values => ({ ...values, [name]: value }))
-    setDate(values => ({ ...values, [name]: value }))
+    //setDate(values => ({ ...values, [name]: value }))
   }
 
   const handleSubmit = e => {

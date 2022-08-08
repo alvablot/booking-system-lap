@@ -88,7 +88,7 @@ function App () {
   //console.log(allBookings)
   function addBooking () {
     console.log(date)
-
+/*
     fetch(`${url}/booking`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -115,7 +115,7 @@ function App () {
       .then(res => res.json())
       .then(json => setAllBookings(json))
 
-    /*
+  
     let theNewCoolStartDate = [];
     theNewCoolStartDate = new Date();
 
