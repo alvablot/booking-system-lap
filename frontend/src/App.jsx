@@ -30,7 +30,6 @@ function App() {
       .then((res) => res.json())
       .then((json) => setUsers(json));
   }, []);
-  
 
   useEffect(() => {
     fetch(`${url}/bookings`)
@@ -41,6 +40,7 @@ function App() {
   let stopBookingDate = [];
 
   useEffect(() => {
+    
     //if (allBookings[0] !== undefined) {
     allBookings.map((booking, i) => {
       startBookingDate[i] = new Date(booking.startDate);
@@ -82,13 +82,13 @@ function App() {
 
   function addBooking(elements, form) {
     let headline;
-    if(form.headline.value !== undefined) headline = form.headline.value;
+    if (form.headline.value !== undefined) headline = form.headline.value;
     const startDate = form.startDate.value;
     const stopDate = form.stopDate.value;
     const startTime = form.startTime.value;
     const stopTime = form.stopTime.value;
     let info;
-    if(form.info.value !== undefined) info = form.info.value;
+    if (form.info.value !== undefined) info = form.info.value;
     const user = form.user.value;
     const startHour = form.startHour.value;
     const customer = form.customer.value;
