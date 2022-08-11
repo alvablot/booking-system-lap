@@ -101,6 +101,7 @@ async function addOne(data) {
   let reqStopTime;
   let reqStopHour;
   let reqStopMinute;
+  const monthArray = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
   result = await initTable(fetchBookingsTable);
   result.map((sDate) => {
@@ -187,15 +188,24 @@ async function addOne(data) {
     const totalDays = Math.ceil(difference / (1000 * 3600 * 24));
 
     if (totalDays > 0) dbStopHour += totalDays * 24;
+    //if(dbStartDate > dbStopDate)
+    const reqStartMonthNr = monthArray[reqStartMonth - 1];
+    const reqStopMonthNr = monthArray[reqStopMonth - 1];
+    const dbStartMonthNr = monthArray[dbStartMonth - 1];
+    const dbtartMonthNr = monthArray[dbStartMonth - 1];
 
-    console.log(dbStopHour);
+    if (reqStartDate < reqStopDate)
+      reqStopDate = reqStartMonthNr - reqStopDate + reqStartDate + reqStopDate;
+    if (dbStartDate < dbStopDate)
+      dbStopDate = dbStartMonthNr - dbStopDate + dbStartDate + dbStopDate;
+
+    console.log(reqStopDate);
+
     if (reqStartYear === dbStartYear && reqStopYear === dbStopYear) {
       if (reqStartMonth >= dbStartMonth && reqStopMonth <= dbStopMonth) {
         if (reqStartDate >= dbStartDate && reqStopDate <= dbStopDate) {
           if (reqStartHour >= dbStartHour && reqStopHour <= dbStopHour) {
-            console.log("krock");
-          } else {
-            console.log("inte krock");
+            return 404;
           }
         }
       }

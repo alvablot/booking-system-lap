@@ -40,30 +40,42 @@ function App() {
   let stopBookingDate = [];
 
   useEffect(() => {
-    
-    //if (allBookings[0] !== undefined) {
+    let startYear;
+    let startMonth;
+    let startDate;
+    let startTime;
+    let startHours;
+    let StartMinutes;
+    let startHour;
+    let stopYear;
+    let stopMonth;
+    let stopDate;
+    let stopTime;
+    let stopHours;
+    let stopMinutes;
+    let daysBetween;
     allBookings.map((booking, i) => {
       startBookingDate[i] = new Date(booking.startDate);
-      let startYear = startBookingDate[i].getFullYear();
-      let startMonth = startBookingDate[i].getMonth() + 1;
-      let startDate = startBookingDate[i].getDate();
-      let startTime = booking.startTime.split(":");
-      let startHours = parseInt(startTime[0]);
-      let StartMinutes = parseInt(startTime[1]);
+      startYear = startBookingDate[i].getFullYear();
+      startMonth = startBookingDate[i].getMonth() + 1;
+      startDate = startBookingDate[i].getDate();
+      startTime = booking.startTime.split(":");
+      startHours = parseInt(startTime[0]);
+      StartMinutes = parseInt(startTime[1]);
       startBookingDate[i].setHours(startHours);
       startBookingDate[i].setMinutes(StartMinutes);
-      let startHour = startBookingDate[i].startHour;
+      startHour = startBookingDate[i].startHour;
 
       stopBookingDate[i] = new Date(booking.stopDate);
-      let stopYear = stopBookingDate[i].getFullYear();
-      let stopMonth = stopBookingDate[i].getMonth() + 1;
-      let stopDate = stopBookingDate[i].getDate();
-      let stopTime = booking.stopTime.split(":");
-      let stopHours = parseInt(stopTime[0]);
-      let stopMinutes = parseInt(stopTime[1]);
+      stopYear = stopBookingDate[i].getFullYear();
+      stopMonth = stopBookingDate[i].getMonth() + 1;
+      stopDate =  stopBookingDate[i].getDate();
+      stopTime = booking.stopTime.split(":");
+      stopHours = parseInt(stopTime[0]);
+      stopMinutes = parseInt(stopTime[1]);
       stopBookingDate[i].setHours(stopHours);
       stopBookingDate[i].setMinutes(stopMinutes);
-      let daysBetween = [stopBookingDate[i].getDate() - startBookingDate[i].getDate()];
+      daysBetween = [stopBookingDate[i].getDate() - startBookingDate[i].getDate()];
       setDaysBeetwenBookings([...daysBeetwenBookings, daysBetween[i]]);
     });
     // if (stopBookingDate[0] !== undefined || startBookingDate[0] !== undefined) {
