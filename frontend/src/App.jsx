@@ -6,7 +6,7 @@ import { startBookingsState } from "./recoil/startBookings/atom";
 import { stopBookingsState } from "./recoil/stopBookings/atom";
 import { bookingDaysState } from "./recoil/bookingDays/atom";
 import { usersState } from "./recoil/users/atom";
-import { allTimeState } from "./recoil/allTime/atom";
+//import { allTimeState } from "./recoil/allTime/atom";
 import Bookings from "./components/Bookings";
 import InputBox from "./components/InputBox";
 import NewTable from "./components/NewTable";
@@ -19,9 +19,9 @@ function App() {
   let [allBookings, setAllBookings] = useRecoilState(allBookingsState);
   let [startBookings, setStartBookings] = useRecoilState(startBookingsState);
   let [stopBookings, setStopBookings] = useRecoilState(stopBookingsState);
-  let [bookingId, setBookingId] = useState("");
-  let destructedBookingsStart = [{}];
-  let destructedBookingsStop = [];
+  //let [bookingId, setBookingId] = useState("");
+  //let destructedBookingsStart = [{}];
+  //let destructedBookingsStop = [];
   let [daysBeetwenBookings, setDaysBeetwenBookings] = useRecoilState(bookingDaysState);
   let [users, setUsers] = useRecoilState(usersState);
 

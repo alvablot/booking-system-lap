@@ -13,8 +13,18 @@ import { bookingDaysState } from "../recoil/bookingDays/atom";
 import yearArray from "../yearArray.json";
 
 function NewTable() {
-  const hours = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-  const dayNameArray = ["Monday", "Thusday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+  const hours = [
+    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+  ];
+  const dayNameArray = [
+    "Monday",
+    "Thusday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
   let countHours = -24;
   let tdTime;
   const [allTime, setAllTime] = useRecoilState(allTimeState);
@@ -28,6 +38,7 @@ function NewTable() {
   let [thisMonday, setThisMonday] = useState(date);
   let [daysBeetwenBookings, setDaysBeetwenBookings] = useRecoilState(bookingDaysState);
   let [booked, setBooked] = useState(false);
+  let timeArray = [];
   //////////////////
   let now = new Date();
   let yearList;
@@ -56,6 +67,7 @@ function NewTable() {
   let countHour;
   let hoursBooked;
   let countWeek = 0;
+  let bookmark;
 
   for (let i = 0; i < 7; i++) {
     days[i] = yearList[-TotalDays + thisWeek + i].date;
@@ -68,7 +80,6 @@ function NewTable() {
     if (strMonth.toString().length < 2) strMonth = "0" + strMonth;
     if (strDate.toString().length < 2) strDate = "0" + strDate;
     const dateStamp = `${year}-${strMonth}-${strDate}`;
-    
 
     setDate({
       dateStamp: dateStamp,
@@ -81,8 +92,6 @@ function NewTable() {
       weekNumber: weekNumber,
     });
     setInputBox("block");
-    
-
   }
   /////////////////////////////////////////////////////////////////////
   useEffect(() => {
@@ -101,7 +110,8 @@ function NewTable() {
           Previous
         </button>
         <div id="date-prev">
-          {yearList[-TotalDays + thisWeek].month} {yearList[-TotalDays].year} {yearList[-TotalDays + thisWeek + countWeek].week } Week: {}
+          {yearList[-TotalDays + thisWeek].month} {yearList[-TotalDays].year}{" "}
+          {yearList[-TotalDays + thisWeek + countWeek].week} Week: {}
         </div>
         <button
           id="button-next"
@@ -116,6 +126,8 @@ function NewTable() {
         <div className="col">
           <div className="headCell">Time</div>
           {allTime.map((time, i) => {
+            const timeSplit = time.split(":");
+            countHour = parseInt(timeSplit[0]);
             return (
               <div className="divCell" key={`cell_${i}_${time}`}>
                 {time}
@@ -125,62 +137,48 @@ function NewTable() {
         </div>
 
         {days.map((day, numberOfDays) => {
-          countHours += 24;
+          countHours += 26;
 
           return (
             <div className="col" key={`col_${numberOfDays}_`}>
               <div className="headCell">
-                {dayNameArray[numberOfDays]} {yearList[-TotalDays + thisWeek - dayOfTheWeek + numberOfDays].date}
+                {dayNameArray[numberOfDays]}{" "}
+                {yearList[-TotalDays + thisWeek - dayOfTheWeek + numberOfDays].date}
               </div>
 
-              {hours.map((hour, a) => {
-                let bookmark = "";
-                let cellId = a + countHours;
-                let time = `${a}:00`;
-                let dayCorrection = 0;
-                let adjust = false;
-                let tdDate = new Date(`${yearList[-TotalDays].year}-${yearList[-TotalDays + thisWeek].monthInt}-${yearList[-TotalDays + thisWeek - dayOfTheWeek + numberOfDays].date} ${time}`);
-                let numberOfHours;
-                let daysBetween = 0;
-                let checkWeek;
-                if (startBookings.length > 0) {
-                  startBookings.map((booking, i) => {
-                    try {
-                      checkWeek = weekNumber === allBookings[i].weekNumber;
-                    } catch (error) {
-                      if (error) return;
-                    }
-                    if (stopBookings[i].getDate() === startBookings[i].getDate() && checkWeek) {
-                      numberOfHours = stopBookings[i].getHours() - startBookings[i].getHours();
-                      for (let b = 0; b < numberOfHours; b++)
-                        if (allBookings[i].startHour + b === cellId) {
-                          bookmark = "booked";
-                        }
-                    }
+              {hours.map((i) => {
+                if (allBookings[0] != undefined) {
+                  const startDate = allBookings[0].startDate.split("-");
+                  const startYear = parseInt(startDate[0]);
+                  const startMonth = parseInt(startDate[1]);
+                  const startDay = parseInt(startDate[2]);
 
-                    daysBetween = (startBookings[i].getDate() - stopBookings[i].getDate() + 1) * -24;
-                    if (stopBookings[i].getDate() > startBookings[i].getDate() && checkWeek) {
-                      numberOfHours = 24 - startBookings[i].getHours() + daysBetween + stopBookings[i].getHours();
-                      for (let b = 0; b < numberOfHours; b++)
-                        if (allBookings[i].startHour + b === cellId) {
-                          bookmark = "booked";
-                        }
-                    }
-                  });
+                  const stopDate = allBookings[0].stopDate.split("-");
+                  const stopYear = parseInt(stopDate[0]);
+                  const stopMonth = parseInt(stopDate[1]);
+                  const stopDay = parseInt(stopDate[2]);
+
+                  const startTime = allBookings[0].startTime.split(":");
+                  const startHour = parseInt(startTime[0]);
+                  const StartMinutes = parseInt(startTime[1]);
+
+                  const stopTime = allBookings[0].stopTime.split(":");
+                  const stopHour = parseInt(stopTime[0]);
+                  const stopMinutes = parseInt(stopTime[1]);
+
+                  console.log(startHour);
+
+                  if (
+                    yearList[-TotalDays + thisWeek - dayOfTheWeek + numberOfDays].date >=
+                      startDay &&
+                    yearList[-TotalDays + thisWeek - dayOfTheWeek + numberOfDays].date <= stopDay &&
+                    i >= startHour &&
+                    i <= stopHour
+                  ) {
+                    bookmark = "booked";
+                  } else bookmark = "";
                 }
-                tdDate = yearList[-TotalDays + thisWeek - dayOfTheWeek + numberOfDays].date;
-                return (
-                  <div
-                    key={`cell_${a}_${countHours}`}
-                    id={cellId}
-                    className={"divCell"}
-                    onClick={(e) => {e.target.style.backgroundColor = "#ff008c";
-                      handleTimeClick(yearList[-TotalDays].year, yearList[-TotalDays + thisWeek].monthInt, e.target, tdDate, time, cellId, weekNumber);
-                    }}
-                  >
-                    {bookmark}
-                  </div>
-                );
+                return <div className="divCell">{bookmark}</div>;
               })}
             </div>
           );
