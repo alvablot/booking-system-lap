@@ -180,7 +180,7 @@ function NewTable() {
                   if(howManyDays > 1) {
                     howManyDays -  stopHour
                     stopHour = stopHour + howManyDays * 24
-                    if(tdDate >= bokStartDate.getDate() && tdDate < bokStopDate.getDate() ) bookmark = "booked";
+                    if(tdDate - 1 >= bokStartDate.getDate() && tdDate - 1 < bokStopDate.getDate() ) bookmark = "booked";
       
                   }
             
