@@ -7,7 +7,7 @@ let users;
 let token = false;
 let activeBooking = {};
 
-const fetchBookingsTable = "SELECT * FROM bookings ORDER BY id DESC";
+const fetchBookingsTable = "SELECT * FROM bookings ORDER BY startDate";
 const insertBookingRow =
   "INSERT INTO bookings (headline, startDate, stopDate, startTime, stopTime, info, user, customer, startHour, weekNumber, room)  VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 const deleteBookingRow = "DELETE FROM bookings WHERE id = ?";
