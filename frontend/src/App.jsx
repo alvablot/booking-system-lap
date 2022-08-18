@@ -11,11 +11,22 @@ import Bookings from "./components/Bookings";
 import InputBox from "./components/InputBox";
 import NewTable from "./components/NewTable";
 //import Timetable from "./components/Timetable";
-import yearArray from "./yearArray.json";
+import newDayArray from "./yearArray.json";
 const url = "http://localhost:4000";
 
+let yearArray = [];
+newDayArray.map((days, i) => {
+  yearArray[i] = {
+    year: days.year,
+    month: days.month,
+    monthInt: days.monthInt,
+    week: days.week,
+    date: days.date,
+    day: i,
+  };
+});
 function App() {
-  //console.log(yearArray.length)
+  //console.log(yearArray)
   let [allBookings, setAllBookings] = useRecoilState(allBookingsState);
   let [startBookings, setStartBookings] = useRecoilState(startBookingsState);
   let [stopBookings, setStopBookings] = useRecoilState(stopBookingsState);
@@ -30,7 +41,6 @@ function App() {
       .then((res) => res.json())
       .then((json) => setUsers(json));
   }, []);
-  
 
   useEffect(() => {
     fetch(`${url}/bookings`)
@@ -82,13 +92,13 @@ function App() {
 
   function addBooking(elements, form) {
     let headline;
-    if(form.headline.value !== undefined) headline = form.headline.value;
+    if (form.headline.value !== undefined) headline = form.headline.value;
     const startDate = form.startDate.value;
     const stopDate = form.stopDate.value;
     const startTime = form.startTime.value;
     const stopTime = form.stopTime.value;
     let info;
-    if(form.info.value !== undefined) info = form.info.value;
+    if (form.info.value !== undefined) info = form.info.value;
     const user = form.user.value;
     const startHour = form.startHour.value;
     const customer = form.customer.value;

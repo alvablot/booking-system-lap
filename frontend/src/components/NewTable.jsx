@@ -13,7 +13,7 @@ import { bookingDaysState } from "../recoil/bookingDays/atom";
 import yearArray from "../yearArray.json";
 
 function NewTable() {
-  const hours = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+  const [allTime, setAllTime] = useRecoilState(allTimeState);
   const dayNameArray = [
     "Monday",
     "Thusday",
@@ -25,7 +25,6 @@ function NewTable() {
   ];
   let countHours = -24;
   let tdTime;
-  const [allTime, setAllTime] = useRecoilState(allTimeState);
   const [allBookings, setAllBookings] = useRecoilState(allBookingsState);
   let [startBookings, setStartBookings] = useRecoilState(startBookingsState);
   let [stopBookings, setStopBookings] = useRecoilState(stopBookingsState);
@@ -81,7 +80,6 @@ function NewTable() {
       day: date.day,
       weekNumber: weekNumber,
     });
-    console.log(weekNumber);
     setInputBox("block");
   }
   /////////////////////////////////////////////////////////////////////
@@ -136,7 +134,7 @@ function NewTable() {
                 {yearList[-TotalDays + thisWeek - dayOfTheWeek + numberOfDays].date}
               </div>
 
-              {hours.map((hour, a) => {
+              {allTime.map((hour, a) => {
                 let bookmark = "";
                 let cellId = a + countHours;
                 let time = `${a}:00`;
@@ -165,32 +163,38 @@ function NewTable() {
                 );
 
                 allBookings.map((bookings) => {
-                  let howManyDays
+                  let howManyDays;
                   let bokStartDate = new Date(bookings.startDate);
                   let bokStopDate = new Date(bookings.stopDate);
+                  bokStartDate = bokStartDate.getDate();
+                  bokStopDate = bokStopDate.getDate();
+
                   let splitStartTime = bookings.startTime.split(":");
                   let startHour = parseInt(splitStartTime[0]);
                   let splitStopTime = bookings.stopTime.split(":");
                   let stopHour = parseInt(splitStopTime[0]) - 1;
-
-                  let howManyHours = stopHour - startHour - 1;
-                  if (bokStopDate > bokStartDate) {
-                    howManyDays = bokStopDate.getDate() - bokStartDate.getDate();
-                  }
-                  if(howManyDays > 1) {
-                    howManyDays -  stopHour
-                    stopHour = stopHour + howManyDays * 24
-                    if(tdDate - 1 >= bokStartDate.getDate() && tdDate - 1 < bokStopDate.getDate() ) bookmark = "booked";
-      
-                  }
-            
-                  if (
-                    cellDate.getDate() === bokStartDate.getDate() ||
-                    cellDate.getDate() === bokStopDate.getDate()
-                  ) {
-                    if (a <= stopHour && a >= startHour) {
+                  let i;
+                  let extrahours;
+                  let dates = [];
+                  let parsedBookHour = bookings.startHour;
+                  howManyDays = bokStopDate - bokStartDate;
+                  let howManyHours = stopHour - startHour;
+                  let cellIdStop = howManyHours + bookings.startHour;
+                  if (bookings.weekNumber === weekNumber) {
+                    if (parsedBookHour === cellId) {
                       bookmark = "booked";
                     }
+                    if (bokStartDate < bokStopDate) {
+                      cellIdStop += 24;
+                    }
+                    if (cellIdStop === cellId) bookmark = "booked";
+
+                    for (let i = parsedBookHour; i < cellIdStop; i++) {
+                      if (i === cellId) bookmark = "booked";
+                    }
+                  }
+                  if (tdDate === bokStopDate && stopHour > a) {
+                    bookmark = "booked";
                   }
                 });
 
@@ -211,7 +215,7 @@ function NewTable() {
                       );
                     }}
                   >
-                    {tdDate} {bookmark}
+                    {cellId} {a} {bookmark}
                   </div>
                 );
               })}
@@ -227,25 +231,35 @@ export default NewTable;
 
 /*
 
-             daysBetween = bookings.startDate.split("-");
-                  //let hoursBetween = bookings.startDate.split("-");
-                  let startTime = bookings.startTime.split(":");
-                  let startHour = parseInt(startTime[0]);
-                  let stopTime = bookings.stopTime.split(":");
-                  let stopHour = parseInt(stopTime[0]);
-                  let hoursBetween = parseInt(stopTime[0]) - parseInt(startTime[0]) - 1;
-                  let daysBetweenStop = bookings.stopDate.split("-");
-                  let bookingDays = daysBetweenStop[2] - daysBetween[2];
-                  let hoursToAdd;
+                allBookings.map((bookings) => {
+                  let howManyDays;
+                  let bokStartDate = new Date(bookings.startDate);
+                  let bokStopDate = new Date(bookings.stopDate);
+                  bokStartDate = bokStartDate.getDate();
+                  bokStopDate = bokStopDate.getDate();
 
-                  for (let i = 0; i < bookingDays + 1; i++) {
-                    if (bookings.startDate === `${year}-${month}-${tdDate - i}`) {
-                      if (a < startHour) bookmark = "";
-                      if (a === startHour || a === stopHour - 1) {
-                        bookmark = "booked";
-                        console.log(startHour);
-                      }
-                      if (a === startHour - 1 + startHour) bookmark = "booked";
-                    }
+                  let splitStartTime = bookings.startTime.split(":");
+                  let startHour = parseInt(splitStartTime[0]);
+                  let splitStopTime = bookings.stopTime.split(":");
+                  let stopHour = parseInt(splitStopTime[0]) - 1;
+                  let i;
+                  let extrahours;
+                  let dates = [];
+                  howManyDays = bokStopDate - bokStartDate;
+                  let howManyHours = stopHour - startHour;
+                  let cellIdStop = howManyHours + bookings.startHour;
+                  // if (bookings.weekNumber === weekNumber) {
+                  if (bookings.startHour === cellId) {
+                    bookmark = "booked";
                   }
+                  if (bokStartDate < bokStopDate) {
+                    cellIdStop += 24;
+                  }
+                  if (cellIdStop === cellId) bookmark = "booked";
+
+                  for (let i = bookings.startHour; i < cellIdStop; i++) {
+                    if (i === cellId) bookmark = "booked";
+                  }
+                  //  }
+                });
                   */
